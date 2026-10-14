@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Communities · SkillLoom</title>
+  <meta name="description" content="Join SkillLoom communities for your field: shared resources, events, discussion and peer learning." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <!-- ============================================================
+         DIRECTORY VIEW (shown when the URL has no ?id=)
+         ============================================================ -->
+    <div id="view-directory">
+      <section class="bg-surface border-b border-line">
+        <div class="container-page py-10 lg:py-14">
+          <span class="eyebrow">Communities</span>
+          <div class="mt-3 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div class="max-w-2xl">
+              <h1 class="font-heading font-extrabold text-3xl sm:text-4xl text-heading tracking-tight">
+                Learn beside people in your field
+              </h1>
+              <p class="mt-3 text-muted leading-body">
+                Communities are where members share resources, run events and find swap partners
+                who speak the same professional language.
+              </p>
+            </div>
+            <div class="relative w-full lg:max-w-sm">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none" id="community-search-icon" aria-hidden="true"></span>
+              <label for="community-search" class="sr-only">Search communities</label>
+              <input id="community-search" class="input pl-11 py-3.5" type="search" autocomplete="off" placeholder="Search communities" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container-page pt-6 pb-14" aria-label="Community directory">
+        <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div class="tabs border-b-0" role="group" aria-label="Directory view">
+            <button type="button" class="tab is-active" data-dir-tab="all" aria-pressed="true">All communities</button>
+            <button type="button" class="tab" data-dir-tab="mine" aria-pressed="false">My communities <span id="mine-count" class="badge badge-primary ml-1.5"></span></button>
+          </div>
+          <div id="community-categories" class="flex gap-2 overflow-x-auto pb-1 xl:flex-wrap xl:overflow-visible" role="group" aria-label="Filter by field"></div>
+        </div>
+
+        <p id="directory-count" class="text-sm text-muted mt-5 pb-5 border-b border-line" role="status" aria-live="polite"></p>
+
+        <div id="community-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-6" aria-busy="true"></div>
+        <div id="community-empty" class="hidden mt-6"></div>
+      </section>
+    </div>
+
+    <!-- ============================================================
+         DETAIL VIEW (community.html?id=web-development)
+         ============================================================ -->
+    <div id="view-detail" hidden>
+      <!-- Cover header -->
+      <header id="community-cover" class="border-b border-line"><!-- rendered --></header>
+
+      <div class="container-page py-6 lg:py-8 grid lg:grid-cols-3 gap-6">
+        <!-- Primary column -->
+        <div class="lg:col-span-2 min-w-0">
+          <div class="tabs" role="tablist" aria-label="Community sections">
+            <button type="button" class="tab is-active" role="tab" aria-selected="true" data-community-tab="feed">Feed</button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="resources">Resources</button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="events">Events</button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="members">Members</button>
+          </div>
+
+          <!-- Feed -->
+          <section id="tab-feed" class="pt-6" role="tabpanel" aria-label="Feed">
+            <div id="create-post" class="card p-5 mb-6"><!-- rendered --></div>
+            <div id="feed-list" class="flex flex-col gap-5"><!-- rendered --></div>
+          </section>
+
+          <!-- Resources -->
+          <section id="tab-resources" class="pt-6" role="tabpanel" aria-label="Resources" hidden>
+            <div class="card p-5 mb-6" id="resource-form"><!-- rendered --></div>
+            <div id="resource-list" class="flex flex-col gap-3"><!-- rendered --></div>
+          </section>
+
+          <!-- Events -->
+          <section id="tab-events" class="pt-6" role="tabpanel" aria-label="Events" hidden>
+            <div id="event-list" class="grid sm:grid-cols-2 gap-5"><!-- rendered --></div>
+          </section>
+
+          <!-- Members -->
+          <section id="tab-members" class="pt-6" role="tabpanel" aria-label="Members" hidden>
+            <div id="member-list" class="grid sm:grid-cols-2 gap-4"><!-- rendered --></div>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="flex flex-col gap-6" aria-label="Community information">
+          <section class="card p-5" aria-labelledby="rules-title">
+            <h2 id="rules-title" class="font-heading font-bold text-base text-heading mb-3 flex items-center gap-2">
+              Community rules
+            </h2>
+            <ol id="rules-list" class="flex flex-col gap-2.5 text-sm text-muted leading-body list-reset"><!-- rendered --></ol>
+          </section>
+
+          <section class="card p-5" aria-labelledby="contributors-title">
+            <h2 id="contributors-title" class="font-heading font-bold text-base text-heading mb-3">Top contributors this week</h2>
+            <ul id="contributors-list" class="flex flex-col gap-3 list-reset"><!-- rendered --></ul>
+          </section>
+
+          <section class="card p-5" aria-labelledby="related-title">
+            <h2 id="related-title" class="font-heading font-bold text-base text-heading mb-3">Related communities</h2>
+            <ul id="related-list" class="flex flex-col gap-2.5 list-reset"><!-- rendered --></ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/community.js"></script>
+</body>
+</html>

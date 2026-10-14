@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile · SkillLoom</title>
+  <meta name="description" content="SkillLoom member profile: skills offered and wanted, ratings, badges and reviews." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-8 lg:py-12">
+      <!-- Identity header (rendered) -->
+      <header id="profile-header" class="card overflow-hidden"><!-- rendered --></header>
+
+      <div class="grid lg:grid-cols-3 gap-6 mt-6">
+        <!-- Main column -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          <section class="card p-6" aria-labelledby="about-title" id="profile-about"></section>
+          <section class="card p-6" aria-labelledby="skills-title" id="profile-skills"></section>
+
+          <section class="card p-6" aria-labelledby="reviews-title" id="profile-reviews">
+            <!-- rating summary + review list -->
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="flex flex-col gap-6" aria-label="Profile details">
+          <section class="card p-6" id="profile-stats"></section>
+          <section class="card p-6" aria-labelledby="badges-title" id="profile-badges"></section>
+          <section class="card p-6" id="profile-cta"></section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/profile.js"></script>
+</body>
+</html>

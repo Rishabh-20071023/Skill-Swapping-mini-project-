@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page not found · SkillLoom</title>
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1 flex items-center">
+    <div class="container-page py-16 lg:py-24">
+      <div class="max-w-xl mx-auto text-center flex flex-col items-center gap-6">
+        <div class="relative" aria-hidden="true">
+          <span class="block font-heading font-extrabold text-[7rem] leading-none tracking-tight" style="color:var(--c-border-strong)">404</span>
+          <span class="absolute inset-0 grid place-items-center pt-10">
+            <span class="grid place-items-center w-16 h-16 rounded-soft bg-surface border border-line text-link shadow-soft">
+              <svg viewBox="0 0 24 24" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+            </span>
+          </span>
+        </div>
+
+        <div class="flex flex-col items-center gap-3 -mt-4">
+          <span class="eyebrow">Page not found</span>
+          <h1 class="font-heading font-extrabold text-2xl sm:text-3xl text-heading tracking-tight">
+            This page isn't part of the exchange
+          </h1>
+          <p class="text-muted leading-body max-w-md">
+            The link may be outdated, or the page moved. Everything else is right where you
+            left it — try the marketplace or your dashboard.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+          <a href="index.html" class="btn btn-primary">Back to home</a>
+          <a href="browse.html" class="btn btn-outline">Browse skills</a>
+          <a href="community.html" class="btn btn-ghost">Communities</a>
+        </div>
+
+        <p class="text-xs text-muted pt-2">Error 404 · SkillLoom</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/notfound.js"></script>
+</body>
+</html>

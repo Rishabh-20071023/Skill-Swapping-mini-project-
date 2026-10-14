@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit wallet · SkillLoom</title>
+  <meta name="description" content="Your SkillLoom credit balance, earning and spending history, and trend chart." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-7 lg:py-10">
+      <header class="mb-7">
+        <span class="eyebrow">Wallet</span>
+        <div class="mt-3 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div class="max-w-xl">
+            <h1 class="font-heading font-extrabold text-3xl text-heading tracking-tight">Credit wallet</h1>
+            <p class="mt-2 text-muted leading-body">
+              Credits are earned by teaching and spent on learning. They never expire and are
+              never exchanged for money.
+            </p>
+          </div>
+          <a href="browse.html" class="btn btn-outline btn-sm self-start sm:self-auto">Earn credits</a>
+        </div>
+      </header>
+
+      <!-- Summary tiles -->
+      <section aria-label="Balance summary" id="wallet-summary" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"><!-- rendered --></section>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Chart -->
+        <section class="card p-6 lg:col-span-2" aria-labelledby="chart-title">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <div>
+              <h2 id="chart-title" class="font-heading font-bold text-lg text-heading">Balance trend</h2>
+              <p class="text-xs text-muted mt-0.5" id="chart-subtitle">Last 7 days</p>
+            </div>
+            <div class="flex items-center gap-2" role="group" aria-label="Chart range">
+              <button type="button" class="chip is-active" data-range="week" aria-pressed="true">Week</button>
+              <button type="button" class="chip" data-range="month" aria-pressed="false">Month</button>
+            </div>
+          </div>
+          <div id="chart-host" role="img" aria-label="Line chart of credit balance over time"><!-- rendered --></div>
+        </section>
+
+        <!-- Explainer -->
+        <section class="card p-6" aria-labelledby="credits-title">
+          <h2 id="credits-title" class="font-heading font-bold text-lg text-heading mb-4">How credits work</h2>
+          <ul class="flex flex-col gap-4 list-reset">
+            <li class="flex gap-3">
+              <span class="grid place-items-center w-9 h-9 rounded-soft bg-surface-3 text-link border border-line shrink-0">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14Z"/></svg>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-heading">Teach to earn</p>
+                <p class="text-xs text-muted leading-body mt-0.5">Complete a session as the teacher and credits land in your wallet.</p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="grid place-items-center w-9 h-9 rounded-soft bg-surface-3 text-link border border-line shrink-0">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h14a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M17 13h.01"/></svg>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-heading">Learn to spend</p>
+                <p class="text-xs text-muted leading-body mt-0.5">Credits are reserved when you book and released when the session ends.</p>
+              </div>
+            </li>
+            <li class="flex gap-3">
+              <span class="grid place-items-center w-9 h-9 rounded-soft bg-surface-3 text-link border border-line shrink-0">
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5.5"/><path d="M8.6 12.9 7 22l5-2.8L17 22l-1.6-9.1"/></svg>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-heading">Contribute to bonus</p>
+                <p class="text-xs text-muted leading-body mt-0.5">Useful posts and shared resources earn bonus credits — look for the +5 toast.</p>
+              </div>
+            </li>
+          </ul>
+          <div class="mt-5 pt-4 border-t border-line">
+            <p class="text-xs text-muted leading-body">Typical session: <strong class="text-heading">8–15 credits</strong>. New members start with a welcome balance.</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- History -->
+      <section class="card mt-6 overflow-hidden" aria-labelledby="history-title">
+        <div class="flex flex-wrap items-center justify-between gap-3 p-6 pb-4">
+          <div>
+            <h2 id="history-title" class="font-heading font-bold text-lg text-heading">Transaction history</h2>
+            <p class="text-xs text-muted mt-0.5">Most recent first</p>
+          </div>
+          <div class="flex items-center gap-2" role="group" aria-label="Filter transactions">
+            <button type="button" class="chip is-active" data-tx-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-tx-filter="earned" aria-pressed="false">Earned</button>
+            <button type="button" class="chip" data-tx-filter="spent" aria-pressed="false">Spent</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="table min-w-[640px]">
+            <caption class="sr-only">Skill credit transactions</caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Description</th>
+                <th scope="col">With</th>
+                <th scope="col">Type</th>
+                <th scope="col" class="text-right">Amount</th>
+                <th scope="col" class="text-right">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="tx-body"></tbody>
+          </table>
+        </div>
+        <div id="tx-empty" class="hidden p-6"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/wallet.js"></script>
+</body>
+</html>

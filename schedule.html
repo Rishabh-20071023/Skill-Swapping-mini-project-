@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schedule a session · SkillLoom</title>
+  <meta name="description" content="Pick a mentor, choose a weekly time slot and confirm your SkillLoom session." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-7 lg:py-10">
+      <header class="mb-7">
+        <span class="eyebrow">Schedule</span>
+        <div class="mt-3 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div class="max-w-xl">
+            <h1 class="font-heading font-extrabold text-3xl text-heading tracking-tight">Book a session</h1>
+            <p class="mt-2 text-muted leading-body">
+              Choose a mentor, pick a slot from this week, and confirm the details. Both sides
+              settle in skill credits after the session.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-muted">
+            <a href="chat.html" class="link-arrow text-sm">Need to reschedule? Message your mentor</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Booking flow -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          <!-- Step 1: mentor -->
+          <section class="card p-6" aria-labelledby="step-1">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="grid place-items-center w-7 h-7 rounded-full bg-surface-3 text-link border border-line font-heading font-bold text-xs">1</span>
+              <h2 id="step-1" class="font-heading font-bold text-lg text-heading">Choose a mentor</h2>
+            </div>
+            <div id="mentor-picker"><!-- rendered --></div>
+          </section>
+
+          <!-- Step 2: slots -->
+          <section class="card p-6" aria-labelledby="step-2">
+            <div class="flex items-center justify-between gap-3 mb-1">
+              <div class="flex items-center gap-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full bg-surface-3 text-link border border-line font-heading font-bold text-xs">2</span>
+                <h2 id="step-2" class="font-heading font-bold text-lg text-heading">Pick a time this week</h2>
+              </div>
+              <span class="text-xs text-muted hidden sm:inline" id="week-label"></span>
+            </div>
+            <p class="text-sm text-muted mb-4">All times shown in your local timezone.</p>
+            <div id="slot-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3"><!-- rendered --></div>
+          </section>
+
+          <!-- Step 3: details -->
+          <section class="card p-6" aria-labelledby="step-3">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="grid place-items-center w-7 h-7 rounded-full bg-surface-3 text-link border border-line font-heading font-bold text-xs">3</span>
+              <h2 id="step-3" class="font-heading font-bold text-lg text-heading">Session details</h2>
+            </div>
+
+            <form id="booking-form" class="flex flex-col gap-4" novalidate>
+              <div>
+                <label class="label" for="session-topic">What do you want to work on?</label>
+                <input class="input" id="session-topic" placeholder="e.g. First guitar lesson — open chords and rhythm" />
+                <p class="field-error" id="err-session-topic" role="alert"></p>
+              </div>
+
+              <div>
+                <label class="label" for="session-notes">Notes for your mentor <span class="text-muted font-normal">(optional)</span></label>
+                <textarea class="textarea" id="session-notes" rows="3" placeholder="Experience level, goals, anything they should know beforehand."></textarea>
+              </div>
+
+              <fieldset>
+                <legend class="label">Session format</legend>
+                <div class="flex flex-wrap gap-3 mt-1">
+                  <label class="chip cursor-pointer has-[:checked]:is-active flex items-center gap-2">
+                    <input type="radio" name="format" value="Video call" class="accent-sky-500" checked />
+                    Video call
+                  </label>
+                  <label class="chip cursor-pointer has-[:checked]:is-active flex items-center gap-2">
+                    <input type="radio" name="format" value="Audio only" class="accent-sky-500" />
+                    Audio only
+                  </label>
+                  <label class="chip cursor-pointer has-[:checked]:is-active flex items-center gap-2">
+                    <input type="radio" name="format" value="In person" class="accent-sky-500" />
+                    In person
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-line">
+                <div id="booking-summary" class="text-sm text-muted">Select a mentor and a time slot to continue.</div>
+                <button type="submit" class="btn btn-primary" id="review-booking">Review booking</button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="flex flex-col gap-6" aria-label="Your schedule">
+          <section class="card p-6" aria-labelledby="upcoming-title">
+            <h2 id="upcoming-title" class="font-heading font-bold text-lg text-heading mb-4">Upcoming sessions</h2>
+            <ul id="upcoming-list" class="flex flex-col gap-3 list-reset"></ul>
+          </section>
+
+          <section class="card p-6">
+            <h2 class="font-heading font-bold text-lg text-heading mb-3 flex items-center gap-2">
+              How booking works
+            </h2>
+            <ol class="flex flex-col gap-3 text-sm text-muted leading-body list-reset">
+              <li class="flex gap-2.5"><span class="font-heading font-bold text-link">1</span> Your mentor has 24 hours to confirm.</li>
+              <li class="flex gap-2.5"><span class="font-heading font-bold text-link">2</span> Credits are reserved, not spent, until the session ends.</li>
+              <li class="flex gap-2.5"><span class="font-heading font-bold text-link">3</span> Both sides rate the session afterwards.</li>
+            </ol>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/schedule.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · SkillLoom</title>
+  <meta name="description" content="Your SkillLoom dashboard: credit balance, upcoming sessions, suggested matches and community activity." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-8 lg:py-12">
+      <!-- Welcome header -->
+      <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-8" id="dash-header">
+        <div>
+          <span class="eyebrow">Dashboard</span>
+          <h1 class="mt-3 font-heading font-extrabold text-3xl sm:text-4xl text-heading tracking-tight" id="dash-greeting">
+            Welcome back
+          </h1>
+          <p class="mt-2 text-muted leading-body" id="dash-subline">Here's what's happening with your swaps this week.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="browse.html" class="btn btn-outline btn-sm">Browse skills</a>
+          <a href="schedule.html" class="btn btn-primary btn-sm">Book a session</a>
+        </div>
+      </header>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Primary column -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          <!-- Credit balance -->
+          <section aria-labelledby="balance-title" id="balance-card"><!-- rendered --></section>
+
+          <!-- Upcoming sessions -->
+          <section class="card p-6" aria-labelledby="sessions-title">
+            <div class="flex items-center justify-between gap-4 mb-4">
+              <h2 id="sessions-title" class="font-heading font-bold text-lg text-heading">Upcoming sessions</h2>
+              <a href="schedule.html" class="text-sm font-semibold text-link hover:underline">View schedule</a>
+            </div>
+            <ul id="sessions-list" class="flex flex-col gap-3 list-reset"><!-- rendered --></ul>
+          </section>
+
+          <!-- Suggested matches -->
+          <section aria-labelledby="matches-title">
+            <div class="flex items-center justify-between gap-4 mb-4">
+              <h2 id="matches-title" class="font-heading font-bold text-lg text-heading flex items-center gap-2">
+                Suggested matches
+              </h2>
+              <a href="browse.html" class="text-sm font-semibold text-link hover:underline">See all skills</a>
+            </div>
+            <div id="matches-grid" class="grid sm:grid-cols-2 gap-5"><!-- rendered --></div>
+          </section>
+
+          <!-- Recent activity -->
+          <section class="card p-6" aria-labelledby="activity-title">
+            <h2 id="activity-title" class="font-heading font-bold text-lg text-heading mb-5">Recent activity</h2>
+            <ol id="activity-list" class="list-reset"><!-- rendered --></ol>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="flex flex-col gap-6" aria-label="Progress and shortcuts">
+          <!-- Level progress -->
+          <section class="card p-6" aria-labelledby="level-title" id="level-card"><!-- rendered --></section>
+
+          <!-- Badges -->
+          <section class="card p-6" aria-labelledby="badges-title">
+            <div class="flex items-center justify-between gap-3 mb-4">
+              <h2 id="badges-title" class="font-heading font-bold text-lg text-heading">Badges</h2>
+              <span class="badge badge-accent" id="badge-count"></span>
+            </div>
+            <div id="badges-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3"><!-- rendered --></div>
+          </section>
+
+          <!-- Quick actions -->
+          <section class="card p-6" aria-labelledby="quick-title">
+            <h2 id="quick-title" class="font-heading font-bold text-lg text-heading mb-4">Quick actions</h2>
+            <div id="quick-actions" class="grid grid-cols-2 gap-3"><!-- rendered --></div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/dashboard.js"></script>
+</body>
+</html>

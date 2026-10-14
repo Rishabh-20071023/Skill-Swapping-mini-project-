@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ratings &amp; reviews · SkillLoom</title>
+  <meta name="description" content="Your SkillLoom rating, review breakdown and the reviews you have left for others." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-7 lg:py-10">
+      <header class="mb-7 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div class="max-w-xl">
+          <span class="eyebrow">Reputation</span>
+          <h1 class="mt-3 font-heading font-extrabold text-3xl text-heading tracking-tight">Ratings &amp; reviews</h1>
+          <p class="mt-2 text-muted leading-body">
+            Both sides review after every session. Reputation is earned in public and never
+            bought.
+          </p>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm self-start sm:self-auto" id="open-review-modal">
+          Leave a review
+        </button>
+      </header>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Summary -->
+        <section class="card p-6" aria-labelledby="summary-title" id="rating-summary"></section>
+
+        <!-- Received reviews -->
+        <section class="lg:col-span-2 flex flex-col gap-5" aria-labelledby="received-title">
+          <div class="flex items-center justify-between gap-3">
+            <h2 id="received-title" class="font-heading font-bold text-lg text-heading">Reviews you've received</h2>
+            <span class="badge badge-neutral" id="received-count"></span>
+          </div>
+          <div id="received-list" class="flex flex-col gap-5"></div>
+        </section>
+      </div>
+
+      <!-- Given reviews -->
+      <section class="mt-8" aria-labelledby="given-title">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <h2 id="given-title" class="font-heading font-bold text-lg text-heading">Reviews you've left</h2>
+          <span class="badge badge-neutral" id="given-count"></span>
+        </div>
+        <div id="given-list" class="grid md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/reviews.js"></script>
+</body>
+</html>

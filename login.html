@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in or sign up · SkillLoom</title>
+  <meta name="description" content="Create your SkillLoom account and start trading skills with members around the world." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
+    <div class="w-full max-w-md">
+      <!-- Brand -->
+      <div class="text-center mb-7">
+        <a href="index.html" class="inline-flex items-center gap-2.5" aria-label="SkillLoom home">
+          <span id="auth-logo"></span>
+          <span class="font-heading font-extrabold text-xl tracking-tight text-heading">Skill<span class="text-link">Loom</span></span>
+        </a>
+        <p class="mt-3 text-sm text-muted">Learn. Teach. Trade.</p>
+      </div>
+
+      <!-- Tabbed auth card -->
+      <section class="card p-6 sm:p-8 shadow-lift" aria-labelledby="auth-heading">
+        <h1 id="auth-heading" class="sr-only">Log in or create an account</h1>
+
+        <div class="tabs" role="tablist" aria-label="Authentication">
+          <button type="button" class="tab is-active" role="tab" id="tab-login" aria-selected="true" aria-controls="auth-panel" data-tab="login">Log in</button>
+          <button type="button" class="tab" role="tab" id="tab-signup" aria-selected="false" aria-controls="auth-panel" data-tab="signup">Create account</button>
+        </div>
+
+        <div id="auth-panel" role="tabpanel" aria-labelledby="tab-login" class="pt-6">
+          <form id="auth-form" novalidate class="flex flex-col gap-4">
+            <!-- Name (sign-up only) -->
+            <div id="group-name" hidden>
+              <label class="label" for="auth-name">Full name</label>
+              <input class="input" id="auth-name" name="name" type="text" autocomplete="name" placeholder="e.g. Priya Nair" aria-describedby="err-name" />
+              <p class="field-error" id="err-name" role="alert"></p>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="label" for="auth-email">Email address</label>
+              <input class="input" id="auth-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="err-email" />
+              <p class="field-error" id="err-email" role="alert"></p>
+            </div>
+
+            <!-- Password -->
+            <div>
+              <label class="label" for="auth-password">Password</label>
+              <div class="relative">
+                <input class="input pr-11" id="auth-password" name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" aria-describedby="err-password" />
+                <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center rounded-lg text-muted hover:text-link transition-colors" data-toggle-password aria-label="Show password"></button>
+              </div>
+              <p class="field-error" id="err-password" role="alert"></p>
+            </div>
+
+            <!-- Confirm password (sign-up only) -->
+            <div id="group-confirm" hidden>
+              <label class="label" for="auth-confirm">Confirm password</label>
+              <input class="input" id="auth-confirm" name="confirm" type="password" autocomplete="new-password" placeholder="Repeat your password" aria-describedby="err-confirm" />
+              <p class="field-error" id="err-confirm" role="alert"></p>
+            </div>
+
+            <!-- Shared form error -->
+            <div id="form-error" hidden></div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-1" id="auth-submit">
+              <span data-submit-label>Log in</span>
+            </button>
+
+            <button type="button" class="btn btn-outline btn-block" id="demo-fill">
+              Use demo credentials
+            </button>
+          </form>
+
+          <p class="text-center text-sm text-muted mt-5" id="auth-switch"></p>
+        </div>
+      </section>
+
+      <p class="text-center text-xs text-muted mt-6 leading-body max-w-sm mx-auto">
+        This is a front-end demonstration — no credentials are sent anywhere. Your session
+        lives only in this browser.
+      </p>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/auth.js"></script>
+</body>
+</html>

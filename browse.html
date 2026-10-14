@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse skills · SkillLoom</title>
+  <meta name="description" content="Search SkillLoom listings by skill, category and level — then request a swap." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <!-- Page header -->
+    <section class="bg-surface border-b border-line">
+      <div class="container-page py-10 lg:py-14">
+        <span class="eyebrow">Marketplace</span>
+        <div class="mt-3 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <div class="max-w-xl">
+            <h1 class="font-heading font-extrabold text-3xl sm:text-4xl text-heading tracking-tight">Browse skills</h1>
+            <p class="mt-3 text-muted leading-body">
+              Every listing is a person offering an hour of what they know in exchange for an
+              hour of something they want to learn.
+            </p>
+          </div>
+          <div class="relative w-full lg:max-w-md">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none" aria-hidden="true" id="search-icon"></span>
+            <label for="skill-search" class="sr-only">Search skills</label>
+            <input
+              id="skill-search"
+              class="input pl-11 py-3.5"
+              type="search"
+              autocomplete="off"
+              placeholder="Search skills, people or tags — e.g. guitar, React, Spanish"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="container-page pt-6" aria-label="Filters">
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div>
+          <span class="sr-only">Filter by category</span>
+          <div id="category-chips" class="flex gap-2 overflow-x-auto pb-1 xl:flex-wrap xl:overflow-visible" role="group" aria-label="Filter by category"></div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <label for="level-filter" class="sr-only">Skill level</label>
+            <select id="level-filter" class="select w-auto min-w-[9.5rem]">
+              <option value="all">All levels</option>
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+            </select>
+          </div>
+          <div>
+            <label for="sort-filter" class="sr-only">Sort listings</label>
+            <select id="sort-filter" class="select w-auto min-w-[10.5rem]">
+              <option value="relevance">Sort: Recommended</option>
+              <option value="rating">Highest rated</option>
+              <option value="credits-low">Credits: low to high</option>
+              <option value="credits-high">Credits: high to low</option>
+              <option value="newest">Newest first</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-4 mt-4 pb-5 border-b border-line">
+        <p id="results-count" class="text-sm text-muted" role="status" aria-live="polite">Loading listings…</p>
+        <button type="button" id="clear-filters" class="hidden text-sm font-semibold text-link hover:underline items-center gap-1.5">
+          Clear filters
+        </button>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="container-page py-8 lg:py-10" aria-label="Skill listings">
+      <div id="skill-grid" class="grid sm:grid-cols-2 xl:grid-cols-3 gap-6" aria-busy="true"></div>
+      <div id="empty-slot" class="hidden"></div>
+    </section>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/browse.js"></script>
+</body>
+</html>

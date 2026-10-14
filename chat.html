@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages · SkillLoom</title>
+  <meta name="description" content="Message your skill-swap partners and agree on session details." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-7 lg:py-10">
+      <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+        <div>
+          <span class="eyebrow">Messages</span>
+          <h1 class="mt-3 font-heading font-extrabold text-3xl text-heading tracking-tight">Chat</h1>
+          <p class="mt-2 text-muted leading-body">Agree the details, then book the session — every swap keeps one thread.</p>
+        </div>
+        <a href="schedule.html" class="btn btn-outline btn-sm self-start sm:self-auto">
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Schedule a session
+        </a>
+      </header>
+
+      <div class="card overflow-hidden chat-shell show-list" id="chat-shell">
+        <!-- Conversation list -->
+        <aside class="chat-list border-r border-line flex flex-col min-h-0" aria-label="Conversations">
+          <div class="p-4 border-b border-line">
+            <label for="conversation-search" class="sr-only">Search conversations</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted pointer-events-none" id="chat-search-icon" aria-hidden="true"></span>
+              <input id="conversation-search" class="input pl-10 py-2.5 text-sm" type="search" placeholder="Search conversations" autocomplete="off" />
+            </div>
+          </div>
+          <div id="conversation-list" class="flex-1 overflow-y-auto min-h-0"></div>
+        </aside>
+
+        <!-- Message pane -->
+        <section class="chat-pane flex flex-col min-h-0" aria-label="Conversation">
+          <header class="px-4 sm:px-5 py-3.5 border-b border-line flex items-center gap-3" id="chat-header"><!-- rendered --></header>
+
+          <div id="message-list" class="flex-1 overflow-y-auto min-h-0 px-4 sm:px-5 py-5 flex flex-col gap-3"></div>
+
+          <form id="message-form" class="p-3 sm:p-4 border-t border-line flex items-center gap-2.5" autocomplete="off">
+            <label for="message-input" class="sr-only">Write a message</label>
+            <input id="message-input" class="input py-2.5" type="text" placeholder="Write a message…" maxlength="500" />
+            <button type="submit" class="btn btn-primary btn-sm shrink-0" id="send-btn">
+              Send
+            </button>
+          </form>
+        </section>
+      </div>
+
+      <p class="text-xs text-muted mt-4 text-center sm:text-left">
+        Demo chat — messages and replies are generated locally and disappear on refresh.
+      </p>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/chat.js"></script>
+</body>
+</html>
