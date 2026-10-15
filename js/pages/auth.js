@@ -163,14 +163,35 @@
           : await SL.api.auth.login(payload);
 
       SL.store.setUser(result.user);
-      if (mode === "signup") SL.store.saveProfile({ name: result.user.name, email: result.user.email });
 
-      SL.toast(
-        mode === "signup" ? "Welcome to SkillLoom — your profile is ready." : "Signed in successfully.",
-        { type: "success" }
-      );
+      let next;
+      if (mode === "signup") {
+        // Start a fresh, blank profile — the wizard below fills in the details.
+        SL.store.saveProfile({
+          name: result.user.name,
+          email: result.user.email,
+          headline: "",
+          bio: "",
+          role: "",
+          org: "",
+          occupation: "",
+          interests: [],
+          hobbies: [],
+          skillsOffered: [],
+          skillsWanted: [],
+          portfolio: [],
+          onboardingComplete: false,
+        });
+        next = "onboarding.html";
+        SL.toast("Welcome to SkillLoom — let's set up your profile.", { type: "success" });
+      } else {
+        const profile = SL.store.getProfile();
+        next = profile && profile.onboardingComplete === false
+          ? "onboarding.html"
+          : sanitizeNext(getParam("next", "dashboard.html"));
+        SL.toast("Signed in successfully.", { type: "success" });
+      }
 
-      const next = sanitizeNext(getParam("next", "dashboard.html"));
       setTimeout(() => window.location.replace(next), 650);
     } catch (err) {
       setLoading(false);
@@ -183,7 +204,7 @@
   /** Only allow same-origin page names — no open redirects. Query strings are kept. */
   function sanitizeNext(value) {
     const raw = String(value || "dashboard.html");
-    const allowed = ["dashboard.html", "browse.html", "community.html", "index.html", "profile.html", "schedule.html", "wallet.html", "chat.html", "reviews.html"];
+    const allowed = ["dashboard.html", "browse.html", "community.html", "index.html", "profile.html", "schedule.html", "wallet.html", "chat.html", "reviews.html", "onboarding.html"];
     const qIndex = raw.indexOf("?");
     const file = (qIndex === -1 ? raw : raw.slice(0, qIndex)).split("/").pop();
     if (allowed.indexOf(file) === -1) return "dashboard.html";
@@ -198,9 +219,13 @@
     SL.footer.render();
     cacheEls();
 
-    // Already signed in → straight to the dashboard.
+    // Already signed in → finish setup if incomplete, else straight to the dashboard.
     if (SL.store.isAuthenticated() && getParam("tab") !== "signup") {
-      window.location.replace(sanitizeNext(getParam("next", "dashboard.html")));
+      const profile = SL.store.getProfile();
+      const next = profile && profile.onboardingComplete === false
+        ? "onboarding.html"
+        : sanitizeNext(getParam("next", "dashboard.html"));
+      window.location.replace(next);
       return;
     }
 

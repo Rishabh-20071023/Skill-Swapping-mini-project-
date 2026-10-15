@@ -96,6 +96,14 @@ window.SL = window.SL || {};
     write(KEYS.PROFILE, Object.assign({}, current, patch));
     return getProfile();
   }
+  /**
+   * Only what this member explicitly saved — i.e. getProfile() minus the seeded
+   * demo template. Lets flows like onboarding tell "never answered" from "the
+   * template happens to contain a value".
+   */
+  function getProfilePatch() {
+    return read(KEYS.PROFILE, null);
+  }
 
   /* ---------- Joined communities ---------------------------------------------- */
   function getJoined() {
@@ -152,7 +160,7 @@ window.SL = window.SL || {};
     KEYS,
     getTheme, setTheme, toggleTheme,
     getUser, setUser, clearUser, isAuthenticated,
-    getProfile, saveProfile,
+    getProfile, saveProfile, getProfilePatch,
     getJoined, isJoined, setJoined, join, leave,
     getCredits, setCredits, addCredits, spendCredits,
     getBookings, addBooking,

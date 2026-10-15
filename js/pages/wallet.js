@@ -1,13 +1,14 @@
 /* =============================================================================
    SkillLoom — Credit wallet controller
    Balance tiles, a pure-SVG trend chart (week/month toggle) and a filterable
-   transaction table. No charting library — the SVG is built by hand.
+   credit history table (credits earned vs spent per month). No charting
+   library — the SVG is built by hand.
    ========================================================================== */
 
 (function (SL) {
   "use strict";
 
-  const { esc, formatDate, formatNumber } = SL.h;
+  const { esc, formatNumber } = SL.h;
 
   let range = "week";
   let txFilter = "all";
@@ -127,40 +128,133 @@
       range === "week" ? "Last 7 days · daily balance" : "Last 5 weeks · weekly balance";
   }
 
-  /* ---------- Transaction table --------------------------------------------------------- */
+  /* ---------- Credit history ------------------------------------------------------------ */
+  const monthLabel = (ts) =>
+    new Date(ts).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+
+  /** Aggregate the ledger into months, newest first. */
+  function buildPeriods() {
+    const groups = new Map();
+
+    SL.data.transactions.forEach((t) => {
+      const d = new Date(t.at);
+      if (Number.isNaN(d.getTime())) return;
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      if (!groups.has(key)) {
+        groups.set(key, { at: d.getTime(), earned: 0, spent: 0, earnedCount: 0, spentCount: 0 });
+      }
+      const g = groups.get(key);
+      g.at = Math.max(g.at, d.getTime());
+      if (t.type === "earned") {
+        g.earned += Math.abs(t.amount);
+        g.earnedCount += 1;
+      } else {
+        g.spent += Math.abs(t.amount);
+        g.spentCount += 1;
+      }
+    });
+
+    return Array.from(groups.values())
+      .sort((a, b) => b.at - a.at)
+      .map((g) => Object.assign(g, { label: monthLabel(g.at) }));
+  }
+
+  /** Human-readable coverage of the ledger: "40 days" / "3 months". */
+  function spanLabel() {
+    const oldest = SL.data.transactions.reduce((min, t) => {
+      const ts = new Date(t.at).getTime();
+      return Number.isNaN(ts) ? min : Math.min(min, ts);
+    }, Date.now());
+    const days = Math.max(1, Math.round((Date.now() - oldest) / 864e5));
+    if (days <= 45) return `${days} day${days === 1 ? "" : "s"}`;
+    const months = Math.max(1, Math.round(days / 30));
+    return `${months} month${months === 1 ? "" : "s"}`;
+  }
+
+  /** Proportional bar for an earned/spent amount. */
+  function bar(value, max, color) {
+    const pct = Math.max(6, Math.round((value / (max || 1)) * 100));
+    return `
+      <span class="block h-1.5 mt-2 rounded-full bg-surface-3 overflow-hidden" aria-hidden="true">
+        <span class="block h-full rounded-full" style="width:${pct}%;background:${color}"></span>
+      </span>`;
+  }
+
+  /** Show only the columns the active filter applies to. */
+  function syncColumns() {
+    document.querySelectorAll("[data-col]").forEach((el) => {
+      const col = el.getAttribute("data-col");
+      el.classList.toggle("hidden", txFilter !== "all" && col !== txFilter);
+    });
+  }
+
+  function netCell(value) {
+    const color = value >= 0 ? "var(--c-success)" : "var(--c-danger)";
+    const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+    return `<span class="font-semibold" style="color:${color}">${sign}${formatNumber(Math.abs(value))} cr</span>`;
+  }
+
   function renderTable() {
     const body = document.getElementById("tx-body");
+    const foot = document.getElementById("tx-foot");
     const empty = document.getElementById("tx-empty");
-    const rows = SL.data.transactions.filter((t) => txFilter === "all" || t.type === txFilter);
+    const periods = buildPeriods();
 
-    if (!rows.length) {
+    if (!periods.length) {
       body.innerHTML = "";
+      foot.classList.add("hidden");
+      foot.innerHTML = "";
       empty.hidden = false;
       empty.innerHTML = SL.ui.emptyState({
         icon: "wallet",
-        title: "No transactions in this filter",
-        body: "Switch the filter above to see the rest of your history.",
+        title: "No credit history yet",
+        body: "Credits you earn from teaching and spend on learning will appear here as monthly totals.",
       });
       return;
     }
 
     empty.hidden = true;
-    body.innerHTML = rows
-      .map((t) => {
-        const earned = t.type === "earned";
+    foot.classList.remove("hidden");
+
+    const maxEarned = Math.max.apply(null, periods.map((p) => p.earned).concat(1));
+    const maxSpent = Math.max.apply(null, periods.map((p) => p.spent).concat(1));
+    const totalEarned = periods.reduce((sum, p) => sum + p.earned, 0);
+    const totalSpent = periods.reduce((sum, p) => sum + p.spent, 0);
+
+    body.innerHTML = periods
+      .map((p) => {
+        const activities = p.earnedCount + p.spentCount;
         return `
         <tr>
-          <td class="whitespace-nowrap text-muted">${formatDate(t.at)}</td>
-          <td class="font-medium text-heading">${esc(t.title)}</td>
-          <td class="text-muted">${esc(t.withName)}</td>
-          <td>${SL.ui.badge(earned ? "Earned" : "Spent", earned ? "success" : "neutral")}</td>
-          <td class="text-right font-semibold" style="color:${earned ? "var(--c-success)" : "var(--c-body)"}">
-            ${earned ? "+" : "−"}${Math.abs(t.amount)} cr
+          <td class="whitespace-nowrap">
+            <span class="font-medium text-heading">${esc(p.label)}</span>
+            <span class="block text-xs text-muted mt-0.5">${activities} ${activities === 1 ? "activity" : "activities"} · ${p.earnedCount} earned · ${p.spentCount} spent</span>
           </td>
-          <td class="text-right text-muted">${t.balance} cr</td>
+          <td class="text-right" data-col="earned">
+            <span class="font-semibold" style="color:var(--c-success)">+${formatNumber(p.earned)} cr</span>
+            ${bar(p.earned, maxEarned, "var(--c-success)")}
+          </td>
+          <td class="text-right" data-col="spent">
+            <span class="font-semibold text-body">−${formatNumber(p.spent)} cr</span>
+            ${bar(p.spent, maxSpent, "var(--c-muted)")}
+          </td>
+          <td class="text-right" data-col="net">${netCell(p.earned - p.spent)}</td>
         </tr>`;
       })
       .join("");
+
+    const footCell = (col, inner) =>
+      `<td data-col="${col}" class="text-right" style="background:var(--c-surface-2);border-bottom:none">${inner}</td>`;
+
+    foot.innerHTML = `
+      <tr>
+        <td class="font-semibold text-heading whitespace-nowrap" style="background:var(--c-surface-2);border-bottom:none">Total · past ${spanLabel()}</td>
+        ${footCell("earned", `<span class="font-semibold" style="color:var(--c-success)">+${formatNumber(totalEarned)} cr</span>`)}
+        ${footCell("spent", `<span class="font-semibold text-body">−${formatNumber(totalSpent)} cr</span>`)}
+        ${footCell("net", netCell(totalEarned - totalSpent))}
+      </tr>`;
+
+    syncColumns();
   }
 
   /* ---------- Chip toggles ------------------------------------------------------------------ */

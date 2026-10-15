@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set up your profile · SkillLoom</title>
+  <meta name="description" content="Tell SkillLoom who you are, what you want to learn, and show your work — a quick setup after creating your account." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    try {
+      if (localStorage.getItem("skillloom:theme") === '"dark"') document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-page text-body font-sans">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <div id="navbar-root"></div>
+
+  <main id="main" class="page-enter flex-1">
+    <div class="container-page py-8 lg:py-12">
+      <div class="max-w-2xl mx-auto">
+        <!-- Intro -->
+        <header class="mb-6">
+          <span class="eyebrow">Set up your profile</span>
+          <h1 class="mt-3 font-heading font-extrabold text-3xl text-heading tracking-tight">Tell members who you are</h1>
+          <p class="mt-2 text-muted leading-body max-w-xl">
+            A few details help the right people find you. Technology and design teachers also
+            share a link to their work — cooking teachers don't have to.
+          </p>
+        </header>
+
+        <!-- Progress -->
+        <div id="ob-progress" class="mb-5"><!-- rendered --></div>
+
+        <!-- Wizard -->
+        <section class="card p-6 sm:p-8 shadow-soft">
+          <div id="ob-step-host"><!-- rendered --></div>
+
+          <div id="ob-error" hidden></div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 mt-7 pt-5 border-t border-line">
+            <button type="button" class="btn btn-outline btn-sm" id="ob-back">Back</button>
+            <div class="flex items-center gap-3">
+              <button type="button" class="text-sm font-semibold text-link hover:underline" id="ob-later">Finish later</button>
+              <button type="button" class="btn btn-primary btn-sm" id="ob-next">Continue</button>
+            </div>
+          </div>
+        </section>
+
+        <p class="text-center text-xs text-muted mt-6 leading-body max-w-sm mx-auto">
+          This is a front-end demonstration — your answers live only in this browser and can be
+          changed any time from your profile.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="toast-root" aria-live="polite" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script defer src="js/utils/helpers.js"></script>
+  <script defer src="js/utils/icons.js"></script>
+  <script defer src="js/utils/animations.js"></script>
+
+  <script defer src="js/data/users.js"></script>
+  <script defer src="js/data/skills.js"></script>
+  <script defer src="js/data/communities.js"></script>
+  <script defer src="js/data/social.js"></script>
+  <script defer src="js/data/marketing.js"></script>
+  <script defer src="js/data/dashboard.js"></script>
+  <script defer src="js/data/wallet.js"></script>
+  <script defer src="js/data/reviews.js"></script>
+  <script defer src="js/data/chat.js"></script>
+  <script defer src="js/data/onboarding.js"></script>
+
+  <script defer src="js/services/store.js"></script>
+  <script defer src="js/services/api.js"></script>
+
+  <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/toast.js"></script>
+  <script defer src="js/components/modal.js"></script>
+  <script defer src="js/components/rating.js"></script>
+  <script defer src="js/components/cards.js"></script>
+  <script defer src="js/components/navbar.js"></script>
+  <script defer src="js/components/footer.js"></script>
+
+  <script defer src="js/pages/onboarding.js"></script>
+</body>
+</html>

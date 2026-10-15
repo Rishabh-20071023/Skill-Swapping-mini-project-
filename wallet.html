@@ -98,14 +98,14 @@
         </section>
       </div>
 
-      <!-- History -->
+      <!-- Credit history -->
       <section class="card mt-6 overflow-hidden" aria-labelledby="history-title">
         <div class="flex flex-wrap items-center justify-between gap-3 p-6 pb-4">
           <div>
-            <h2 id="history-title" class="font-heading font-bold text-lg text-heading">Transaction history</h2>
-            <p class="text-xs text-muted mt-0.5">Most recent first</p>
+            <h2 id="history-title" class="font-heading font-bold text-lg text-heading">Credit history</h2>
+            <p class="text-xs text-muted mt-0.5">Credits earned and spent in the past · most recent first</p>
           </div>
-          <div class="flex items-center gap-2" role="group" aria-label="Filter transactions">
+          <div class="flex items-center gap-2" role="group" aria-label="Filter credit history">
             <button type="button" class="chip is-active" data-tx-filter="all" aria-pressed="true">All</button>
             <button type="button" class="chip" data-tx-filter="earned" aria-pressed="false">Earned</button>
             <button type="button" class="chip" data-tx-filter="spent" aria-pressed="false">Spent</button>
@@ -113,19 +113,18 @@
         </div>
 
         <div class="overflow-x-auto">
-          <table class="table min-w-[640px]">
-            <caption class="sr-only">Skill credit transactions</caption>
+          <table class="table min-w-[560px]">
+            <caption class="sr-only">Credits earned and spent per month</caption>
             <thead>
               <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Description</th>
-                <th scope="col">With</th>
-                <th scope="col">Type</th>
-                <th scope="col" class="text-right">Amount</th>
-                <th scope="col" class="text-right">Balance</th>
+                <th scope="col">Period</th>
+                <th scope="col" data-col="earned" style="text-align:right">Earned</th>
+                <th scope="col" data-col="spent" style="text-align:right">Spent</th>
+                <th scope="col" data-col="net" style="text-align:right">Net</th>
               </tr>
             </thead>
             <tbody id="tx-body"></tbody>
+            <tfoot id="tx-foot" class="hidden"></tfoot>
           </table>
         </div>
         <div id="tx-empty" class="hidden p-6"></div>
