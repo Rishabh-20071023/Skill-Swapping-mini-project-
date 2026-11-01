@@ -29,10 +29,16 @@
       </div>
 
       <div class="px-6 sm:px-8 pb-6 sm:pb-7 relative z-10">
-        <div class="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
+        <!--
+          items-start (never items-end): bottom alignment let the text block — which
+          is taller than the pulled-up avatar — overflow upward behind the banner.
+          The avatar alone keeps the negative margin, so the name always starts
+          below the banner at every breakpoint.
+        -->
+        <div class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
           <div class="shrink-0 self-start -mt-12 sm:-mt-14 relative z-10">${SL.ui.avatar(profile, "xl", { presence: true, className: "ring-4 ring-surface" })}</div>
 
-          <div class="flex-1 min-w-0 pb-1 sm:pt-2">
+          <div class="flex-1 min-w-0 sm:pt-3">
             <div class="flex flex-wrap items-center gap-2.5">
               <h1 class="font-heading font-extrabold text-2xl sm:text-3xl text-heading tracking-tight">${esc(profile.name)}</h1>
               <span class="badge badge-accent">${esc(profile.level || "Member")}</span>
@@ -47,7 +53,7 @@
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-2.5 sm:pb-1">
+          <div class="flex flex-wrap gap-2.5 sm:pt-3">
             ${isSelf
               ? `<button type="button" class="btn btn-primary btn-sm" data-edit-profile>${SL.icon("pencil", "w-4 h-4")} Edit profile</button>`
               : `<button type="button" class="btn btn-primary btn-sm" data-request-swap="${esc(profile.id)}">Request swap</button>

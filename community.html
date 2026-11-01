@@ -78,12 +78,9 @@
       <div class="container-page py-6 lg:py-8 grid lg:grid-cols-3 gap-6">
         <!-- Primary column -->
         <div class="lg:col-span-2 min-w-0">
-          <div class="tabs" role="tablist" aria-label="Community sections">
-            <button type="button" class="tab is-active" role="tab" aria-selected="true" data-community-tab="feed">Feed</button>
-            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="resources">Resources</button>
-            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="events">Events</button>
-            <button type="button" class="tab" role="tab" aria-selected="false" data-community-tab="members">Members</button>
-          </div>
+          <!-- Tab strip is the shared component (js/components/sections.js):
+               the same markup and keyboard model as the landing page's Skills tabs. -->
+          <div id="community-tabs"><!-- rendered --></div>
 
           <!-- Feed -->
           <section id="tab-feed" class="pt-6" role="tabpanel" aria-label="Feed">
@@ -153,6 +150,7 @@
   <script defer src="js/services/api.js"></script>
 
   <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/sections.js"></script>
   <script defer src="js/components/toast.js"></script>
   <script defer src="js/components/modal.js"></script>
   <script defer src="js/components/rating.js"></script>

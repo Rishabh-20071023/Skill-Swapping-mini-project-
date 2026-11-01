@@ -1,110 +1,66 @@
 /* =============================================================================
    SkillLoom — Landing page controller
-   Fills the data-driven sections of index.html and boots shared behaviour
-   (navbar, footer, reveals, count-ups, 3D hero parallax).
+   Fills the editorial sections of index.html (hero quotes, stories, skills
+   tabs, workshops, learn, credits, community, about) and keeps the existing
+   swap planner working exactly as before.
+
+   Section markup comes from js/components/sections.js so the same patterns can
+   be reused on app pages. Data comes from js/data/marketing.js — the comment on
+   each block names the endpoint a backend would serve it from.
    ========================================================================== */
 
 (function (SL) {
   "use strict";
 
   const { esc, formatNumber } = SL.h;
+  const S = SL.sections;
 
-  /* ---------- Stats strip --------------------------------------------------- */
-  function renderStats() {
-    const host = document.getElementById("stats-grid");
-    if (!host) return;
-    host.innerHTML = SL.data.stats
-      .map(
-        (s) => `
-        <div class="text-center lg:text-left lg:border-l lg:border-line lg:first:border-l-0 lg:pl-6 first:pl-0" data-reveal>
-          <p class="stat-number text-3xl sm:text-4xl" data-count="${s.value}" data-count-suffix="${esc(s.suffix || "")}">0</p>
-          <p class="mt-1.5 text-sm text-muted">${esc(s.label)}</p>
-        </div>`
-      )
-      .join("");
-  }
+  /* ---------- Hero: letter-by-letter headline --------------------------------- */
+  /**
+   * Wraps each character in a span with a small stagger. The CSS animation runs
+   * once; with prefers-reduced-motion the global rule collapses it to instant.
+   *
+   * Letters are grouped into words: an inline-block per character would let the
+   * browser break a line between any two letters ("Tra / de."), so each word is
+   * wrapped in a no-wrap .hero-word and lines can only break at real spaces.
+   */
+  function initHeroLetters() {
+    const h1 = document.getElementById("hero-title");
+    if (!h1 || h1.dataset.lettersReady) return;
+    h1.dataset.lettersReady = "1";
 
-  /* ---------- Feature grid (3D tilt cards) ---------------------------------- */
-  function renderFeatures() {
-    const host = document.getElementById("feature-grid");
-    if (!host) return;
-    host.innerHTML = SL.data.features.map((f, i) => SL.cards.featureCard(f, i)).join("");
-  }
+    const text = h1.textContent.replace(/\s+/g, " ").trim();
+    let delay = 0;
 
-  /* ---------- How it works ---------------------------------------------------- */
-  function renderSteps() {
-    const host = document.getElementById("steps-grid");
-    if (!host) return;
-    host.innerHTML = SL.data.howItWorks
-      .map(
-        (step, i) => `
-        <li class="card p-6 flex flex-col gap-3 h-full card-hover" data-reveal data-reveal-delay="${i * 90}">
-          <span class="font-heading font-extrabold text-2xl text-primary/90">${esc(step.step)}</span>
-          <h3 class="font-heading font-bold text-lg text-heading">${esc(step.title)}</h3>
-          <p class="text-sm text-muted leading-body">${esc(step.body)}</p>
-        </li>`
-      )
-      .join("");
-  }
-
-  /* ---------- AI section copy --------------------------------------------------- */
-  function renderAi() {
-    const host = document.getElementById("ai-list");
-    if (!host) return;
-    host.innerHTML = SL.data.aiFeatures
-      .map(
-        (f, i) => `
-        <div class="rounded-card border border-line bg-surface p-5 shadow-soft" data-reveal data-reveal-delay="${i * 100}">
-          <div class="flex items-start gap-4">
-            <span class="grid place-items-center w-11 h-11 rounded-soft shrink-0 bg-surface-3 text-link border border-line">
-              ${SL.icon(f.icon, "w-5 h-5")}
-            </span>
-            <div class="min-w-0">
-              <h3 class="font-heading font-bold text-lg text-heading">${esc(f.title)}</h3>
-              <p class="text-sm text-muted leading-body mt-1.5">${esc(f.body)}</p>
-              <ul class="mt-3 flex flex-wrap gap-2 list-reset">
-                ${f.points.map((p) => `<li class="tag">${SL.icon("check", "w-3.5 h-3.5")}${esc(p)}</li>`).join("")}
-              </ul>
-            </div>
-          </div>
-        </div>`
-      )
-      .join("");
-  }
-
-  /* ---------- Community preview -------------------------------------------------- */
-  function renderCommunityPreview() {
-    const host = document.getElementById("community-preview");
-    if (!host) return;
-    const featured = ["web-development", "ui-ux-design", "music-instruments", "languages-culture"]
-      .map((id) => SL.data.communityById(id))
-      .filter(Boolean);
-
-    host.innerHTML = featured
-      .map((c, i) => {
-        const joined = SL.store.isJoined(c.id);
-        return `
-        <a href="community.html?id=${esc(c.id)}"
-           class="card card-hover p-6 flex flex-col gap-3.5 group"
-           data-reveal data-reveal-delay="${i * 80}">
-          <div class="flex items-center justify-between">
-            ${SL.ui.iconTile(c.icon, c.tone, "w-11 h-11 rounded-soft")}
-            ${joined ? SL.ui.badge("Joined", "success", "check") : SL.ui.badge(c.category, "neutral")}
-          </div>
-          <h3 class="font-heading font-bold text-heading text-base group-hover:text-link transition-colors">${esc(c.name)}</h3>
-          <p class="text-sm text-muted leading-body line-clamp-3">${esc(c.tagline)}</p>
-          <span class="mt-auto pt-3 flex items-center justify-between text-xs text-muted border-t border-line">
-            <span class="flex items-center gap-1.5">${SL.icon("users", "w-4 h-4")} ${formatNumber(c.members + (joined ? 1 : 0))} members</span>
-            <span class="text-link font-semibold flex items-center gap-1">View
-              <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-          </span>
-        </a>`;
+    h1.innerHTML = text
+      .split(" ")
+      .map((word) => {
+        const letters = word
+          .split("")
+          .map((ch) => {
+            const html = `<span class="hero-letter" aria-hidden="true" style="animation-delay:${delay}ms">${esc(ch)}</span>`;
+            delay += 34;
+            return html;
+          })
+          .join("");
+        return `<span class="hero-word">${letters}</span>`;
       })
-      .join("");
+      // A plain space (not a fixed-width span) so a line break never leaves an
+      // indent at the start of the next line.
+      .join(" ");
+
+    // Keep the real sentence available to screen readers and search engines.
+    h1.setAttribute("aria-label", text);
   }
 
-  /* ---------- Hero proof row -------------------------------------------------------- */
+  /* ---------- Hero: quote carousel -------------------------------------------- */
+  function renderQuotes() {
+    const host = document.getElementById("hero-quotes");
+    if (!host) return;
+    host.innerHTML = S.quoteCarousel(SL.data.quotes || []);
+  }
+
+  /* ---------- Hero: social proof ---------------------------------------------- */
   function renderProof() {
     const host = document.getElementById("hero-proof");
     if (!host) return;
@@ -122,20 +78,323 @@
       </div>`;
   }
 
-  /* ---------- Swap builder (plan your exchange) -------------------------------------- */
+  /* ---------- Marquee --------------------------------------------------------- */
+  function renderMarquee() {
+    const host = document.getElementById("marquee-host");
+    if (host) host.innerHTML = S.marquee(SL.data.marquee || []);
+  }
 
-  /* The hero picker (#hero-teach/#hero-learn) and the planner card
-     (#swap-teach/#swap-learn) are two views of one selection pair — every
-     change mirrors across and re-runs the match plan. */
-  const TEACH_IDS = ["hero-teach", "swap-teach"];
-  const LEARN_IDS = ["hero-learn", "swap-learn"];
+  /* ---------- Stats strip ----------------------------------------------------- */
+  function renderStats() {
+    const host = document.getElementById("stats-grid");
+    if (!host) return;
+    host.innerHTML = SL.data.stats
+      .map(
+        (s) => `
+        <div class="text-center lg:text-left lg:border-l lg:border-line lg:first:border-l-0 lg:pl-6 first:pl-0" data-reveal>
+          <p class="stat-number text-3xl sm:text-4xl" data-count="${s.value}" data-count-suffix="${esc(s.suffix || "")}">0</p>
+          <p class="mt-1.5 text-sm text-muted">${esc(s.label)}</p>
+        </div>`
+      )
+      .join("");
+  }
 
+  /* ---------- Stories --------------------------------------------------------- */
+  function renderStories() {
+    const head = document.getElementById("stories-head");
+    const grid = document.getElementById("stories-grid");
+    if (!head || !grid) return;
+    head.innerHTML = S.sectionHeader({
+      id: "stories-title",
+      eyebrow: "Stories",
+      title: "Skills in motion",
+      intro: "Three exchanges, written up plainly: what was taught, what was learned, what stuck.",
+    });
+    grid.innerHTML = (SL.data.stories || []).map(S.storyCard).join("");
+  }
+
+  /* ---------- Skills: tabs, workshops, matching notes -------------------------- */
+  function renderSkills() {
+    const head = document.getElementById("skills-head");
+    const tabsHost = document.getElementById("skills-tabs");
+    if (!head || !tabsHost) return;
+
+    head.innerHTML = S.sectionHeader({
+      id: "skills-title",
+      eyebrow: "Skills",
+      title: "What will you learn today?",
+      intro: "Four featured skills per field, each taught by a member who has done the work — swap in credits, not cash.",
+    });
+
+    const tabs = (SL.data.skillTabs || []).map((tab) => ({
+      id: tab.id,
+      label: tab.label,
+      panel: `
+        <p class="text-sm text-muted mt-4 max-w-xl">${esc(tab.intro)}</p>
+        <ol class="num-list mt-6">
+          ${tab.items
+            .map((item, i) =>
+              S.listRow({
+                n: String(i + 1).padStart(2, "0"),
+                title: esc(item.title),
+                meta: item.availability,
+                body: item.body,
+                action: `<button type="button" class="btn btn-outline btn-sm" data-skill-request="${esc(item.title)}">
+                  Request swap
+                </button>`,
+                delay: i * 60,
+              })
+            )
+            .join("")}
+        </ol>`,
+    }));
+
+    tabsHost.innerHTML = S.tabs({
+      id: "skills",
+      label: "Skill categories",
+      tabs,
+    });
+
+    renderWorkshops();
+    renderMatchingNotes();
+  }
+
+  function renderWorkshops() {
+    const host = document.getElementById("workshops-list");
+    if (!host) return;
+    // Backend: GET /api/workshops?month=current
+    host.innerHTML = (SL.data.workshops || [])
+      .map((w, i) =>
+        S.listRow({
+          n: String(i + 1).padStart(2, "0"),
+          title: esc(w.title),
+          meta: `${w.date} · ${w.host}`,
+          body: w.body,
+          action: `<button type="button" class="btn btn-outline btn-sm" data-rsvp="${esc(w.title)}">RSVP</button>`,
+          delay: i * 70,
+        })
+      )
+      .join("");
+  }
+
+  /** Existing AI copy, rendered as the numbered transparency list. */
+  function renderMatchingNotes() {
+    const host = document.getElementById("matching-notes");
+    if (!host) return;
+    host.innerHTML = (SL.data.aiFeatures || [])
+      .map((f, i) =>
+        S.listRow({
+          n: String(i + 1).padStart(2, "0"),
+          title: esc(f.title),
+          meta: (f.points || []).slice(0, 2).join(" · "),
+          body: f.body,
+        })
+      )
+      .join("");
+  }
+
+  /* ---------- Learn: flip cards + guides --------------------------------------- */
+  function renderLearn() {
+    const head = document.getElementById("learn-head");
+    const grid = document.getElementById("glossary-grid");
+    const guides = document.getElementById("guides-host");
+    if (!head || !grid || !guides) return;
+
+    head.innerHTML = S.sectionHeader({
+      id: "learn-title",
+      eyebrow: "Learn",
+      title: "SkillLoom 101",
+      intro: "Six terms, one line each. Flip a card to see how the exchange actually works.",
+    });
+
+    grid.innerHTML = (SL.data.glossary || []).map(S.flipCard).join("");
+
+    guides.innerHTML = S.accordion({
+      id: "guides",
+      items: SL.data.guides || [],
+    });
+
+    // The four-step explainer from the original landing page, in the numbered
+    // row style (data.howItWorks is unchanged).
+    const steps = document.getElementById("swap-steps");
+    if (steps) {
+      steps.innerHTML = (SL.data.howItWorks || [])
+        .map((s, i) =>
+          S.listRow({ n: String(i + 1).padStart(2, "0"), title: esc(s.title), body: s.body, delay: i * 60 })
+        )
+        .join("");
+    }
+  }
+
+  /* ---------- Credits ---------------------------------------------------------- */
+  function renderCredits() {
+    const head = document.getElementById("credits-head");
+    const flow = document.getElementById("credit-flow");
+    const tiers = document.getElementById("tier-grid");
+    if (!head || !flow || !tiers) return;
+
+    head.innerHTML = S.sectionHeader({
+      id: "credits-title",
+      eyebrow: "Credits",
+      title: "No money. Only credits.",
+      intro: "One hour taught earns one credit; one hour learned spends one. Everything else is bookkeeping.",
+    });
+
+    flow.innerHTML = (SL.data.creditFlow || [])
+      .map((f, i) =>
+        S.listRow({
+          n: String(i + 1).padStart(2, "0"),
+          title: esc(f.title),
+          body: f.body,
+          delay: i * 70,
+        })
+      )
+      .join("");
+
+    const credits = SL.store.getCredits();
+    const tiersData = SL.data.creditTiers || [];
+    const current = tiersData.filter((t) => credits >= t.at).pop() || tiersData[0];
+    const next = tiersData.find((t) => t.at > credits) || null;
+
+    tiers.innerHTML = tiersData
+      .map((t, i) => S.tierCard(t, i, current && t.id === current.id))
+      .join("");
+
+    // Credit meter — the bar is filled by motion.initProgressBars via data-value.
+    const balanceEl = document.getElementById("credit-balance");
+    const fillEl = document.getElementById("credit-fill");
+    const nextEl = document.getElementById("credit-next");
+    const tierEl = document.getElementById("credit-tier");
+    const meterEl = document.getElementById("credit-meter");
+
+    if (balanceEl) balanceEl.textContent = formatNumber(credits);
+    const pct = next
+      ? Math.max(4, Math.min(100, Math.round(((credits - current.at) / (next.at - current.at)) * 100)))
+      : 100;
+    if (fillEl) {
+      // data-value keeps the shared progress-bar helper in sync; the direct
+      // width below means the meter animates even before it is scrolled into
+      // view (the wallet page reuses the same pattern on scroll).
+      fillEl.dataset.value = String(pct);
+      requestAnimationFrame(() => {
+        fillEl.style.width = `${pct}%`;
+      });
+    }
+    if (nextEl) nextEl.innerHTML = next ? `${formatNumber(next.at - credits)} to <strong>${esc(next.name)}</strong>` : "Top tier reached";
+    if (tierEl) tierEl.innerHTML = `<strong>${esc(current ? current.name : "Starter")}</strong>`;
+    if (meterEl) {
+      meterEl.setAttribute(
+        "aria-label",
+        next
+          ? `${credits} credits: ${pct}% of the way from ${current.name} to ${next.name}`
+          : `${credits} credits: top tier reached`
+      );
+    }
+  }
+
+  /* ---------- Community --------------------------------------------------------- */
+  function renderCommunity() {
+    const head = document.getElementById("community-head");
+    const grid = document.getElementById("community-grid");
+    const benefits = document.getElementById("community-benefits");
+    if (!head || !grid || !benefits) return;
+
+    head.innerHTML = S.sectionHeader({
+      id: "community-title",
+      eyebrow: "Community",
+      title: "Join your field's community",
+      intro: "Field groups for the work you actually do — resources, events and people who answer the same day.",
+    });
+
+    const featured = ["web-development", "ui-ux-design", "music-instruments", "languages-culture"]
+      .map((id) => SL.data.communityById(id))
+      .filter(Boolean);
+
+    grid.innerHTML = featured
+      .map((c, i) => {
+        const joined = SL.store.isJoined(c.id);
+        return `
+        <article class="card p-5 flex flex-col gap-3" data-reveal data-reveal-delay="${i * 70}">
+          <div class="flex items-start justify-between gap-3">
+            ${SL.ui.iconTile(c.icon, c.tone, "w-10 h-10 rounded-soft")}
+            <span class="text-xs text-muted flex items-center gap-1.5">${SL.icon("users", "w-4 h-4")} ${formatNumber(c.members + (joined ? 1 : 0))}</span>
+          </div>
+          <h3 class="font-heading font-bold text-heading text-base leading-snug">
+            <a href="community.html?id=${esc(c.id)}" class="hover:text-link transition-colors">${esc(c.name)}</a>
+          </h3>
+          <p class="text-sm text-muted leading-body line-clamp-2">${esc(c.tagline)}</p>
+          <button type="button" class="btn ${joined ? "btn-ghost" : "btn-outline"} btn-sm mt-auto w-full" data-join-community="${esc(c.id)}" aria-pressed="${joined}">
+            ${joined ? SL.icon("check", "w-4 h-4") + " Joined" : "Join"}
+          </button>
+        </article>`;
+      })
+      .join("");
+
+    benefits.innerHTML = (SL.data.communityBenefits || [])
+      .map((b, i) =>
+        S.listRow({
+          n: String(i + 1).padStart(2, "0"),
+          title: esc(b.title),
+          body: b.body,
+          delay: i * 70,
+        })
+      )
+      .join("");
+  }
+
+  /* ---------- About -------------------------------------------------------------- */
+  function renderAbout() {
+    const head = document.getElementById("about-head");
+    const story = document.getElementById("about-story");
+    const values = document.getElementById("about-values");
+    const timeline = document.getElementById("about-timeline");
+    if (!head || !story || !values || !timeline) return;
+
+    head.innerHTML = S.sectionHeader({
+      id: "about-title",
+      eyebrow: "About us",
+      title: "Still learning",
+      intro: "A ledger, a group chat, and a rule that has not changed since day one.",
+    });
+
+    const about = SL.data.about || { story: "", values: [], milestones: [] };
+    story.textContent = about.story;
+
+    values.innerHTML = about.values
+      .map((v, i) =>
+        S.listRow({
+          n: String(i + 1).padStart(2, "0"),
+          title: esc(v.title),
+          body: v.body,
+          delay: i * 70,
+        })
+      )
+      .join("");
+
+    timeline.innerHTML = about.milestones
+      .map(
+        (m) => `<li class="tl-item">
+          <span class="tl-date">${esc(m.date)}</span>
+          <p class="tl-title">${esc(m.title)}</p>
+          <p class="tl-body">${esc(m.body)}</p>
+        </li>`
+      )
+      .join("");
+  }
+
+  /* =============================================================================
+     Swap planner (existing functionality, unchanged flow)
+     ========================================================================== */
+
+  /* #swap-teach / #swap-learn drive the planner and the orb chips in the hero. */
   const getTeach = () => document.getElementById("swap-teach").value;
   const getLearn = () => document.getElementById("swap-learn").value;
 
   function setSelections(teachId, learnId) {
-    TEACH_IDS.forEach((id) => { const el = document.getElementById(id); if (el) el.value = teachId; });
-    LEARN_IDS.forEach((id) => { const el = document.getElementById(id); if (el) el.value = learnId; });
+    const teach = document.getElementById("swap-teach");
+    const learn = document.getElementById("swap-learn");
+    if (teach) teach.value = teachId;
+    if (learn) learn.value = learnId;
     syncHeroChips();
   }
 
@@ -162,22 +421,22 @@
     if (iconB) iconB.innerHTML = SL.icon(learn ? categoryIcon(learn.category) : "music", "w-3.5 h-3.5");
   }
 
-  /** Short human line under the hero picker once a plan resolves. */
-  function setHeroHint(count) {
-    const hint = document.getElementById("hero-picker-hint");
-    if (!hint) return;
-    if (count === null) return; // validation error already shown in the planner
+  /** Short human line under the planner once a plan resolves. */
+  function setSwapHint(count) {
+    const hint = document.getElementById("swap-hint");
+    if (!hint || count === undefined) return;
     const teach = (SL.data.swapTopics || []).find((t) => t.id === getTeach());
     const learn = (SL.data.swapTopics || []).find((t) => t.id === getLearn());
     if (!teach || !learn) return;
-    hint.innerHTML = count > 0
-      ? `${count} member${count === 1 ? "" : "s"} teach ${esc(learn.label)} and want ${esc(teach.label)} — <a href="#plan">see your suggestions</a>.`
-      : `No exact matches for ${esc(teach.label)} ⇄ ${esc(learn.label)} yet — <a href="#plan">try another pair</a>.`;
+    hint.innerHTML =
+      count > 0
+        ? `${count} member${count === 1 ? "" : "s"} teach ${esc(learn.label)} and want ${esc(teach.label)}.`
+        : `No exact matches for ${esc(teach.label)} ⇄ ${esc(learn.label)} yet — try another pair.`;
   }
 
-  /** Populate all four selects from data.swapTopics, grouped by category. */
+  /** Populate the planner selects from data.swapTopics, grouped by category. */
   function renderSwapSelects() {
-    const targets = ["swap-teach", "swap-learn", "hero-teach", "hero-learn"]
+    const targets = ["swap-teach", "swap-learn"]
       .map((id) => document.getElementById(id))
       .filter(Boolean);
     if (!targets.length) return;
@@ -198,7 +457,9 @@
       )
       .join("");
 
-    targets.forEach((sel) => { sel.innerHTML = placeholder + groups; });
+    targets.forEach((sel) => {
+      sel.innerHTML = placeholder + groups;
+    });
 
     // Sensible demo defaults: the platform's canonical example (trade guitar
     // lessons for coding lessons) — and it lands on a direct barter.
@@ -333,51 +594,45 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      runSwapPlan().then((n) => setHeroHint(n === null ? undefined : n));
+      runSwapPlan().then((n) => setSwapHint(n === null ? undefined : n));
     });
 
-    // Any change on either side mirrors to the other view, re-runs the plan
-    // and refreshes the hero hint + orb chips.
-    const onPick = () => {
-      setSwapError("");
-      syncHeroChips();
-      runSwapPlan().then((n) => setHeroHint(n === null ? undefined : n));
-    };
-    [...TEACH_IDS, ...LEARN_IDS].forEach((id) => {
+    // Any change mirrors into the orb chips and re-runs the plan.
+    ["swap-teach", "swap-learn"].forEach((id) => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener("change", () => {
-        const changed = el.value; // read from the select the user actually touched
-        // Mirror the field that changed into its twin.
-        if (TEACH_IDS.indexOf(id) !== -1) TEACH_IDS.forEach((t) => { const e2 = document.getElementById(t); if (e2) e2.value = changed; });
-        else LEARN_IDS.forEach((t) => { const e2 = document.getElementById(t); if (e2) e2.value = changed; });
-        onPick();
-      });
+      if (el)
+        el.addEventListener("change", () => {
+          setSwapError("");
+          syncHeroChips();
+          runSwapPlan().then((n) => setSwapHint(n === null ? undefined : n));
+        });
     });
 
     const flip = () => {
       const t = getTeach();
       setSelections(getLearn(), t);
       setSwapError("");
-      runSwapPlan().then((n) => setHeroHint(n === null ? undefined : n));
+      runSwapPlan().then((n) => setSwapHint(n === null ? undefined : n));
     };
     document.getElementById("swap-flip").addEventListener("click", flip);
-    const heroFlip = document.getElementById("hero-flip");
-    if (heroFlip) heroFlip.addEventListener("click", flip);
 
-    // First-run plan so the hero hint and suggestions are populated on load.
-    runSwapPlan().then((n) => setHeroHint(n === null ? undefined : n));
+    // First-run plan so the hint and suggestions are populated on load.
+    runSwapPlan().then((n) => setSwapHint(n === null ? undefined : n));
 
     // Request Swap from a match row (auth-gated, placeholder behaviour).
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-request-swap]");
-      if (!btn || !document.getElementById("swap-results").contains(btn)) return;
+      const results = document.getElementById("swap-results");
+      if (!btn || !results || !results.contains(btn)) return;
       const skill = SL.data.skills.find((s) => s.id === btn.dataset.requestSwap);
       if (!skill) return;
       const owner = SL.data.userById(skill.userId) || { name: "this member" };
 
       if (!SL.store.isAuthenticated()) {
         SL.toast("Please sign in to request a swap.", { type: "warning", title: "Sign in required" });
-        setTimeout(() => { window.location.href = "login.html?next=index.html"; }, 900);
+        setTimeout(() => {
+          window.location.href = "login.html?next=index.html";
+        }, 900);
         return;
       }
 
@@ -387,20 +642,99 @@
     });
   }
 
+  /* =============================================================================
+     Landing-only interactions
+     ========================================================================== */
+
+  /** Skills list + workshops: placeholder actions until the API exists. */
+  function initLandingActions() {
+    document.addEventListener("click", (e) => {
+      const request = e.target.closest("[data-skill-request]");
+      if (request) {
+        if (!SL.store.isAuthenticated()) {
+          SL.toast("Sign in to request a swap.", { type: "warning", title: "Sign in required" });
+          setTimeout(() => {
+            window.location.href = "login.html?next=index.html";
+          }, 900);
+          return;
+        }
+        request.disabled = true;
+        request.innerHTML = `${SL.icon("check", "w-4 h-4")} Requested`;
+        SL.toast(`Request sent for “${request.dataset.skillRequest}”.`, { type: "success" });
+        return;
+      }
+
+      const rsvp = e.target.closest("[data-rsvp]");
+      if (rsvp) {
+        rsvp.disabled = true;
+        rsvp.innerHTML = `${SL.icon("check", "w-4 h-4")} Going`;
+        SL.toast(`You're on the list for “${rsvp.dataset.rsvp}”.`, { type: "success" });
+        return;
+      }
+
+      const join = e.target.closest("[data-join-community]");
+      if (join) {
+        const id = join.dataset.joinCommunity;
+        const joinedNow = !SL.store.isJoined(id);
+        joinedNow ? SL.store.join(id) : SL.store.leave(id);
+        join.setAttribute("aria-pressed", String(joinedNow));
+        join.className = `btn ${joinedNow ? "btn-ghost" : "btn-outline"} btn-sm mt-auto w-full`;
+        join.innerHTML = joinedNow ? `${SL.icon("check", "w-4 h-4")} Joined` : "Join";
+        SL.toast(joinedNow ? "Joined — see you in the feed." : "Left the community.", {
+          type: joinedNow ? "success" : "info",
+        });
+      }
+    });
+
+    const form = document.getElementById("newsletter-form");
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("newsletter-email");
+        const error = document.getElementById("newsletter-error");
+        const email = (input.value || "").trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+          if (error) {
+            error.textContent = "That email doesn't look right — try name@example.com.";
+            error.classList.add("is-visible");
+          }
+          input.focus();
+          return;
+        }
+        if (error) {
+          error.textContent = "";
+          error.classList.remove("is-visible");
+        }
+        // Backend: POST /api/newsletter { email }
+        input.value = "";
+        SL.toast("You're in. One email a month, no spam.", { type: "success" });
+      });
+    }
+  }
+
   /* ---------- Boot ------------------------------------------------------------------ */
   function init() {
     SL.navbar.render();
     SL.footer.render();
 
-    renderStats();
-    renderFeatures();
-    renderSteps();
-    renderAi();
-    renderCommunityPreview();
+    initHeroLetters();
+    renderQuotes();
     renderProof();
+    renderMarquee();
+    renderStats();
+    renderStories();
+    renderSkills();
+    renderLearn();
+    renderCredits();
+    renderCommunity();
+    renderAbout();
+
     initSwapBuilder();
+    initLandingActions();
     syncHeroChips();
 
+    // Section behaviour: tabs, flips, accordions, carousel (delegated).
+    S.init();
     SL.motion.initAll();
     SL.motion.initHeroParallax();
   }

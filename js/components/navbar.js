@@ -17,12 +17,21 @@ window.SL = window.SL || {};
 
   const { esc, qs, qsa, on } = SL.h;
 
+  /* Landing anchors first (the single-page navigation), then the one app page
+     that is also a destination for newcomers. Signed-in members reach the rest
+     of the app from the avatar menu, and the mobile menu lists them explicitly. */
   const LINKS = [
-    { key: "home", label: "Home", href: "index.html" },
-    { key: "features", label: "Features", href: "index.html#features" },
+    { key: "stories", label: "Stories", href: "index.html#stories" },
+    { key: "skills", label: "Skills", href: "index.html#skills" },
+    { key: "learn", label: "Learn", href: "index.html#learn" },
     { key: "community", label: "Community", href: "community.html" },
-    { key: "browse", label: "Browse Skills", href: "browse.html" },
-    { key: "dashboard", label: "Dashboard", href: "dashboard.html" },
+    { key: "about", label: "About", href: "index.html#about" },
+  ];
+
+  /* Extra destinations inside the app — shown in the mobile menu only. */
+  const APP_LINKS = [
+    { label: "Browse skills", href: "browse.html" },
+    { label: "Dashboard", href: "dashboard.html" },
   ];
 
   function currentSection() {
@@ -113,10 +122,16 @@ window.SL = window.SL || {};
           </button>
         </nav>
 
-        <div id="mobile-menu" class="mobile-menu lg:hidden bg-surface">
+        <div id="mobile-menu" class="mobile-menu lg:hidden bg-surface" inert aria-hidden="true">
           <ul class="container-page pt-3 pb-1 flex flex-col gap-0.5 list-reset">
             ${navLinksHtml("nav-link block w-full px-2 py-3 rounded-soft text-base font-medium")}
           </ul>
+          <div class="container-page pb-2 flex flex-col gap-0.5">
+            ${APP_LINKS.map(
+              (l) =>
+                `<a href="${l.href}" class="nav-link block w-full px-2 py-2.5 rounded-soft text-sm font-medium">${l.label}</a>`
+            ).join("")}
+          </div>
           <div class="container-page py-4 border-t border-line flex flex-col gap-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-medium text-muted">Appearance</span>
@@ -167,6 +182,11 @@ window.SL = window.SL || {};
     const menu = qs("#mobile-menu", root);
     const setMenu = (open) => {
       menu.classList.toggle("is-open", open);
+      // A collapsed menu must not keep focusable links: `inert` removes it from
+      // the tab order and the accessibility tree while the panel is closed.
+      if (open) menu.removeAttribute("inert");
+      else menu.setAttribute("inert", "");
+      menu.setAttribute("aria-hidden", String(!open));
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       qs("[data-icon-open]", toggle).hidden = open;

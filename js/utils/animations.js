@@ -31,6 +31,22 @@ window.SL = window.SL || {};
       return;
     }
 
+    /* Anything already on screen at boot is shown straight away: the observer's
+       first callback can arrive after a frame or two, and above-the-fold copy
+       must never sit at opacity 0 waiting for it. */
+    const pending = items.filter((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.92 && r.bottom > 0) {
+        const delay = Number(el.dataset.revealDelay || 0);
+        if (delay) setTimeout(() => el.classList.add("is-visible"), delay);
+        else el.classList.add("is-visible");
+        el.dataset.revealed = "1";
+        return false;
+      }
+      return true;
+    });
+    if (!pending.length) return;
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -45,7 +61,7 @@ window.SL = window.SL || {};
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
     );
 
-    items.forEach((el) => io.observe(el));
+    pending.forEach((el) => io.observe(el));
   }
 
   /* ---------- Count-up numbers --------------------------------------------- */

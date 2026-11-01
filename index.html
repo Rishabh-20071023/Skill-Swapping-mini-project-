@@ -38,16 +38,18 @@
         <div class="absolute top-40 right-0 w-[24rem] h-[24rem] rounded-full" style="background:radial-gradient(closest-side, rgba(99,102,241,.10), transparent)"></div>
       </div>
 
-      <div class="container-page pt-14 pb-16 lg:pt-20 lg:pb-24 grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div class="container-page pt-12 pb-14 lg:pt-16 lg:pb-20 grid lg:grid-cols-2 gap-12 lg:gap-10 items-center">
         <!-- Copy -->
         <div class="max-w-xl" data-reveal>
           <p class="eyebrow">Peer-to-peer skill bartering</p>
 
-          <h1 id="hero-title" class="mt-5 font-heading font-extrabold text-heading text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight">
-            Trade what you know for what you want to learn.
+          <!-- Letters are wrapped by js/pages/home.js so the headline animates in
+               one character at a time; without JS the plain text still reads. -->
+          <h1 id="hero-title" class="hero-headline mt-5 font-heading font-extrabold text-heading" data-hero-letters>
+            Learn. Teach. Trade.
           </h1>
 
-          <p class="mt-5 text-lg text-muted leading-body max-w-lg">
+          <p class="mt-6 text-lg text-muted leading-body max-w-lg">
             Teach an hour of your craft, spend one learning someone else's. SkillLoom matches
             members, schedules the session and settles the exchange in skill credits — no cash,
             no courses, no gatekeeping.
@@ -58,14 +60,10 @@
               Get Started
               <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href="browse.html" class="btn btn-outline btn-lg">Explore Skills</a>
+            <a href="#skills" class="btn btn-outline btn-lg">Explore skills</a>
           </div>
 
-          <p class="mt-8 font-heading font-bold text-lg tracking-[0.28em] text-heading/80 uppercase">
-            Learn. Teach. Trade.
-          </p>
-
-          <div class="mt-7 flex items-center gap-4" id="hero-proof">
+          <div class="mt-9 flex items-center gap-4" id="hero-proof">
             <!-- Filled by js/pages/home.js -->
           </div>
         </div>
@@ -112,230 +110,238 @@
             </div>
           </div>
 
-          <!-- Caption under the scene -->
           <p class="text-center text-xs text-muted mt-2 flex items-center justify-center gap-1.5">
-            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>
+            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>
             One hour taught · one hour learned · credits settle the difference
           </p>
-
-          <!-- Interactive picker: choose the exchange yourself. The orbs above
-               echo these choices; matching suggestions update as you pick. -->
-          <div class="hero-picker" data-reveal data-reveal-delay="220">
-            <div class="hero-picker-field">
-              <label class="label" for="hero-teach">I can teach</label>
-              <select class="select" id="hero-teach"></select>
-            </div>
-            <button type="button" class="swap-flip" id="hero-flip" aria-label="Swap both skills">
-              <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
-            </button>
-            <div class="hero-picker-field">
-              <label class="label" for="hero-learn">I want to learn</label>
-              <select class="select" id="hero-learn"></select>
-            </div>
-            <p class="hero-picker-hint" id="hero-picker-hint" role="status">
-              Suggestions update as you choose — <a href="#plan">see who matches</a>.
-            </p>
-          </div>
         </div>
+      </div>
+
+      <!-- Quote carousel: rendered by js/pages/home.js (SL.sections.quoteCarousel) -->
+      <div class="container-page pb-12">
+        <div id="hero-quotes" class="max-w-2xl border-t border-line pt-8"></div>
       </div>
     </section>
 
+    <!-- ===================== MARQUEE ===================== -->
+    <div id="marquee-host" aria-hidden="true"></div>
+
     <!-- ===================== STATS ===================== -->
-    <section class="bg-surface border-y border-line" aria-label="Platform statistics">
+    <section class="bg-surface border-b border-line" aria-label="Platform statistics">
       <div class="container-page py-10 lg:py-12">
         <div id="stats-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8"></div>
       </div>
     </section>
 
-    <!-- ===================== SWAP BUILDER ===================== -->
-    <section id="plan" class="container-page section-pad" aria-labelledby="plan-title">
-      <div class="max-w-2xl mb-10" data-reveal>
-        <span class="eyebrow">Plan your exchange</span>
-        <h2 id="plan-title" class="mt-4 font-heading font-bold text-3xl sm:text-4xl text-heading tracking-tight leading-tight">
-          Choose what you teach. Choose what you learn.
-        </h2>
-        <p class="mt-4 text-muted leading-body">
-          Pick two skills — one you're confident teaching, one you'd like to pick up — and
-          we'll surface members whose offer and request line up with yours. No cash either way.
-        </p>
-      </div>
-
-      <div class="card p-6 sm:p-8 max-w-4xl mx-auto shadow-soft" data-reveal data-reveal-delay="120">
-        <form id="swap-form" novalidate class="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
-          <div>
-            <label class="label" for="swap-teach">I can teach</label>
-            <select class="select" id="swap-teach" name="teach" aria-describedby="swap-error"></select>
-          </div>
-
-          <!-- Swap both selections -->
-          <button type="button" id="swap-flip" class="swap-flip" aria-label="Swap both skills">
-            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
-          </button>
-
-          <div>
-            <label class="label" for="swap-learn">I want to learn</label>
-            <select class="select" id="swap-learn" name="learn" aria-describedby="swap-error"></select>
-          </div>
-
-          <div class="sm:col-span-3 flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
-            <button type="submit" class="btn btn-primary btn-lg sm:shrink-0" id="swap-submit">
-              Find my matches
-              <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-            <p class="text-xs text-muted leading-relaxed">
-              Demo data — matches come from the sample marketplace and nothing is sent anywhere.
-            </p>
-          </div>
-
-          <p class="field-error sm:col-span-3" id="swap-error" role="alert"></p>
-        </form>
-
-        <!-- Match results: skeleton → cards / empty state -->
-        <div id="swap-results" class="mt-7 pt-7 border-t border-line" aria-live="polite" aria-busy="false">
-          <div id="swap-idle" class="flex items-start gap-3 rounded-soft bg-surface-2 border border-line p-4">
-            <span class="text-link shrink-0 mt-0.5"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 16.5V11M12 7.5h-0.01"/></svg></span>
-            <p class="text-sm text-body leading-body">Choose both skills above to preview who you'd be matched with — direct barters appear first.</p>
-          </div>
-        </div>
-      </div>
+    <!-- ===================== STORIES ===================== -->
+    <section id="stories" class="container-page section-pad" aria-labelledby="stories-title">
+      <div id="stories-head"></div>
+      <div id="stories-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12"></div>
     </section>
 
-    <!-- ===================== FEATURES ===================== -->
-    <section id="features" class="container-page section-pad" aria-labelledby="features-title">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12" data-reveal>
-        <div class="max-w-2xl">
-          <span class="eyebrow">Key features</span>
-          <h2 id="features-title" class="mt-4 font-heading font-bold text-3xl sm:text-4xl text-heading tracking-tight leading-tight">
-            Everything a fair exchange needs
-          </h2>
-          <p class="mt-4 text-muted leading-body">
-            From the first match to the final review, each part of SkillLoom is built to keep
-            exchanges clear, reliable and worth repeating.
-          </p>
-        </div>
-        <a href="browse.html" class="link-arrow shrink-0">
-          See it in the marketplace
-          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-
-      <div id="feature-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
-
-    <!-- ===================== HOW IT WORKS ===================== -->
-    <section id="how" class="bg-surface border-y border-line" aria-labelledby="how-title">
+    <!-- ===================== SKILLS ===================== -->
+    <section id="skills" class="bg-surface border-y border-line" aria-labelledby="skills-title">
       <div class="container-page section-pad">
-        <div class="max-w-2xl mb-12" data-reveal>
-          <span class="eyebrow">How a swap works</span>
-          <h2 id="how-title" class="mt-4 font-heading font-bold text-3xl sm:text-4xl text-heading tracking-tight">
-            Four steps, no money
-          </h2>
-        </div>
-        <ol id="steps-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 list-reset"></ol>
-      </div>
-    </section>
+        <div id="skills-head"></div>
 
-    <!-- ===================== AI ===================== -->
-    <section id="ai" class="container-page section-pad" aria-labelledby="ai-title">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div data-reveal>
-          <span class="eyebrow">AI-powered enhancements</span>
-          <h2 id="ai-title" class="mt-4 font-heading font-bold text-3xl sm:text-4xl text-heading tracking-tight leading-tight">
-            Suggestions you can question
-          </h2>
-          <p class="mt-4 text-muted leading-body max-w-xl">
-            The intelligence layer exists to save you time, not to make decisions for you.
-            Every suggestion shows its reasoning, and every score can be traced back to
-            something a real person wrote.
-          </p>
+        <!-- Tabs: generated from data.skillTabs, keyboard support in SL.sections -->
+        <div id="skills-tabs" class="mt-10"></div>
 
-          <div id="ai-list" class="mt-8 flex flex-col gap-5"></div>
-        </div>
+        <div class="grid lg:grid-cols-12 gap-12 mt-16">
+          <!-- Workshops (Voyager's "this season" pattern) -->
+          <div class="lg:col-span-5">
+            <h3 class="font-heading font-bold text-xl text-heading tracking-tight">Upcoming workshops this month</h3>
+            <p class="text-sm text-muted mt-1.5">Small sessions hosted by members. RSVP to hold a place.</p>
+            <ol id="workshops-list" class="num-list mt-5"></ol>
+          </div>
 
-        <!-- Presentational mock of the matching panel -->
-        <div class="relative" data-reveal data-reveal-delay="120">
-          <div class="card p-6 sm:p-7">
-            <div class="flex items-center justify-between gap-3 pb-4 border-b border-line">
-              <div class="flex items-center gap-2.5">
-                <span class="grid place-items-center w-9 h-9 rounded-soft bg-surface-3 text-link border border-line">
-                  <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
-                </span>
+          <!-- Swap planner: the existing matcher, in the new card system -->
+          <div class="lg:col-span-7">
+            <div class="card p-6 sm:p-8">
+              <span class="eyebrow">Plan an exchange</span>
+              <h3 class="font-heading font-bold text-2xl text-heading tracking-tight mt-3">
+                Choose what you teach. Choose what you learn.
+              </h3>
+              <p class="text-sm text-muted leading-body mt-2">
+                Pick two skills and we'll surface members whose offer and request line up with
+                yours. No cash either way.
+              </p>
+
+              <form id="swap-form" novalidate class="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end mt-6">
                 <div>
-                  <p class="text-sm font-semibold text-heading">Suggested match</p>
-                  <p class="text-xs text-muted">Based on goals, level & availability</p>
+                  <label class="label" for="swap-teach">I can teach</label>
+                  <select class="select" id="swap-teach" name="teach" aria-describedby="swap-error"></select>
+                </div>
+
+                <button type="button" id="swap-flip" class="swap-flip" aria-label="Swap both skills">
+                  <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+                </button>
+
+                <div>
+                  <label class="label" for="swap-learn">I want to learn</label>
+                  <select class="select" id="swap-learn" name="learn" aria-describedby="swap-error"></select>
+                </div>
+
+                <div class="sm:col-span-3 flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                  <button type="submit" class="btn btn-primary sm:shrink-0" id="swap-submit">
+                    Find my matches
+                    <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                  <p class="text-xs text-muted leading-relaxed" id="swap-hint" role="status">
+                    Demo data — matches come from the sample marketplace and nothing is sent anywhere.
+                  </p>
+                </div>
+
+                <p class="field-error sm:col-span-3" id="swap-error" role="alert"></p>
+              </form>
+
+              <!-- Match results: skeleton → rows / empty state. A real API would
+                   replace SL.api.matchmaking.plan() without touching this markup. -->
+              <div id="swap-results" class="mt-6 pt-6 border-t border-line" aria-live="polite" aria-busy="false">
+                <div id="swap-idle" class="flex items-start gap-3 rounded-soft bg-surface-2 border border-line p-4">
+                  <span class="text-link shrink-0 mt-0.5"><svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 16.5V11M12 7.5h-0.01"/></svg></span>
+                  <p class="text-sm text-body leading-body">Choose both skills above to preview who you'd be matched with — direct barters appear first.</p>
                 </div>
               </div>
-              <span class="badge badge-accent">96% match</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 py-5">
-              <div class="rounded-soft bg-surface-2 border border-line p-4">
-                <p class="text-[0.7rem] uppercase tracking-[0.12em] text-muted font-semibold">You offer</p>
-                <p class="text-sm font-semibold text-heading mt-1">UI/UX Design</p>
-                <p class="text-xs text-muted mt-1">Intermediate · evenings</p>
-              </div>
-              <div class="rounded-soft bg-surface-2 border border-line p-4">
-                <p class="text-[0.7rem] uppercase tracking-[0.12em] text-muted font-semibold">They want</p>
-                <p class="text-sm font-semibold text-heading mt-1">UI/UX Design</p>
-                <p class="text-xs text-muted mt-1">Beginner · weekends</p>
-              </div>
-            </div>
-
-            <ul class="flex flex-col gap-2.5 text-sm text-body list-reset">
-              <li class="flex gap-2.5"><span class="text-emerald-500 shrink-0"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Goal alignment: design fundamentals for a career switch</li>
-              <li class="flex gap-2.5"><span class="text-emerald-500 shrink-0"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Availability overlap: 6 hours per week</li>
-              <li class="flex gap-2.5"><span class="text-emerald-500 shrink-0"><svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Credit parity: 12 credits per session, both sides</li>
-            </ul>
-
-            <div class="mt-5 pt-5 border-t border-line">
-              <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-semibold text-heading">Review sentiment</p>
-                <p class="text-xs text-muted">Across 64 reviews</p>
-              </div>
-              <div class="flex flex-col gap-3">
-                <div class="breakdown-row" style="grid-template-columns:6rem 1fr 2.5rem">
-                  <span class="text-muted">Clarity</span>
-                  <span class="breakdown-track"><span class="breakdown-fill" data-value="94" style="background:#0EA5E9"></span></span>
-                  <span class="text-right text-muted">94%</span>
-                </div>
-                <div class="breakdown-row" style="grid-template-columns:6rem 1fr 2.5rem">
-                  <span class="text-muted">Preparation</span>
-                  <span class="breakdown-track"><span class="breakdown-fill" data-value="89" style="background:#0EA5E9"></span></span>
-                  <span class="text-right text-muted">89%</span>
-                </div>
-                <div class="breakdown-row" style="grid-template-columns:6rem 1fr 2.5rem">
-                  <span class="text-muted">Reliability</span>
-                  <span class="breakdown-track"><span class="breakdown-fill" data-value="97" style="background:#6366F1"></span></span>
-                  <span class="text-right text-muted">97%</span>
-                </div>
-              </div>
+            <!-- Matching transparency (existing AI copy, numbered) -->
+            <div class="mt-8">
+              <h4 class="font-heading font-bold text-sm uppercase tracking-[0.12em] text-muted">How your suggestions are built</h4>
+              <ol id="matching-notes" class="num-list mt-4"></ol>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== COMMUNITY PREVIEW ===================== -->
-    <section class="bg-surface border-y border-line" aria-labelledby="community-title">
+    <!-- ===================== LEARN ===================== -->
+    <section id="learn" class="container-page section-pad" aria-labelledby="learn-title">
+      <div id="learn-head"></div>
+
+      <!-- SkillLoom 101: six flip cards -->
+      <div id="glossary-grid" class="flip-grid mt-10"></div>
+
+      <!-- Guides: three numbered accordions -->
+      <div class="grid lg:grid-cols-12 gap-10 mt-16">
+        <div class="lg:col-span-4">
+          <span class="eyebrow">Guides</span>
+          <h3 class="mt-4 font-heading font-extrabold text-2xl sm:text-3xl text-heading tracking-tight leading-tight">
+            Three habits worth copying
+          </h3>
+          <p class="mt-3 text-muted leading-body text-sm">
+            Short, opinionated notes from members who have run more swaps than they can count.
+            Open one, take the four bullets, close it.
+          </p>
+        </div>
+        <div class="lg:col-span-8" id="guides-host"></div>
+      </div>
+
+      <!-- A swap, start to finish (kept from the original landing page) -->
+      <div class="mt-16 pt-10 border-t border-line">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h3 class="font-heading font-extrabold text-2xl text-heading tracking-tight">A swap, start to finish</h3>
+          <a href="#skills" class="link-arrow text-sm">Try it above
+            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <ol id="swap-steps" class="num-list mt-6"></ol>
+      </div>
+    </section>
+
+    <!-- ===================== CREDITS ===================== -->
+    <section id="credits" class="bg-surface border-y border-line" aria-labelledby="credits-title">
       <div class="container-page section-pad">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12" data-reveal>
-          <div class="max-w-2xl">
-            <span class="eyebrow">Communities</span>
-            <h2 id="community-title" class="mt-4 font-heading font-bold text-3xl sm:text-4xl text-heading tracking-tight">
-              Learn beside people in your field
-            </h2>
-            <p class="mt-4 text-muted leading-body">
-              Join the group for the work you actually do — shared resources, weekly events and
-              peers who answer within the hour.
+        <div id="credits-head"></div>
+
+        <div class="grid lg:grid-cols-12 gap-12 mt-12">
+          <div class="lg:col-span-5">
+            <ol id="credit-flow" class="num-list"></ol>
+
+            <!-- Animated credit meter: value comes from the store, so a real
+                 balance (GET /api/me/credits) animates the same way. -->
+            <div class="card p-6 mt-8">
+              <p class="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Your balance</p>
+              <div class="flex items-end gap-2 mt-2">
+                <p class="font-heading font-extrabold text-4xl text-heading tracking-tight" id="credit-balance">340</p>
+                <p class="text-sm text-muted mb-1">credits</p>
+              </div>
+              <div class="credit-meter mt-4">
+                <div class="credit-track" role="img" id="credit-meter" aria-label="Progress toward the next tier">
+                  <span class="credit-fill" id="credit-fill" data-value="68"></span>
+                </div>
+                <div class="credit-legend">
+                  <span id="credit-next">340 to <strong>Master</strong></span>
+                  <span id="credit-tier">Weaver</span>
+                </div>
+              </div>
+              <a href="wallet.html" class="link-arrow mt-5 text-sm">Open credit wallet
+                <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7">
+            <div id="tier-grid" class="tier-grid"></div>
+            <p class="text-xs text-muted mt-4">
+              Tiers only change bonuses — never the price of a session. Everyone pays one credit per hour.
             </p>
           </div>
-          <a href="community.html" class="link-arrow shrink-0">
-            Browse all communities
-            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COMMUNITY ===================== -->
+    <section id="community" class="container-page section-pad" aria-labelledby="community-title">
+      <div id="community-head"></div>
+
+      <div class="grid lg:grid-cols-12 gap-12 mt-12">
+        <div class="lg:col-span-7">
+          <p class="text-muted leading-body max-w-lg mb-6">
+            Pick the field you work in. Every group keeps its own resources, events and feed —
+            and the members inside it are the same people you can request a swap from.
+          </p>
+          <div id="community-grid" class="grid sm:grid-cols-2 gap-4"></div>
+          <a href="community.html" class="link-arrow mt-6 text-sm">Browse all communities
+            <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
 
-        <div id="community-preview" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        <div class="lg:col-span-5">
+          <div class="card p-6 sm:p-7">
+            <h3 class="font-heading font-bold text-xl text-heading tracking-tight">One email a month</h3>
+            <p class="text-sm text-muted leading-body mt-2">
+              A short letter about new workshops, credit changes and the best swaps of the month.
+            </p>
+            <!-- Backend: POST /api/newsletter { email } — the form only validates locally today. -->
+            <form id="newsletter-form" class="capture-form mt-5" novalidate>
+              <label class="sr-only" for="newsletter-email">Your email address</label>
+              <input class="input" type="email" id="newsletter-email" name="email" placeholder="Your email address" autocomplete="email" required />
+              <button type="submit" class="btn btn-primary">Count me in</button>
+            </form>
+            <p class="capture-note mt-2">One email a month. No spam, ever.</p>
+            <p class="field-error" id="newsletter-error" role="alert"></p>
+          </div>
+
+          <ol id="community-benefits" class="num-list mt-6"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section id="about" class="bg-surface border-y border-line" aria-labelledby="about-title">
+      <div class="container-page section-pad">
+        <div class="grid lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-7">
+            <div id="about-head"></div>
+            <p id="about-story" class="mt-6 text-muted leading-body max-w-xl"></p>
+            <ol id="about-values" class="num-list mt-8"></ol>
+          </div>
+          <div class="lg:col-span-5">
+            <span class="eyebrow">Milestones</span>
+            <ol id="about-timeline" class="timeline mt-6"></ol>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -387,6 +393,7 @@
 
   <!-- Components -->
   <script defer src="js/components/ui.js"></script>
+  <script defer src="js/components/sections.js"></script>
   <script defer src="js/components/toast.js"></script>
   <script defer src="js/components/modal.js"></script>
   <script defer src="js/components/rating.js"></script>

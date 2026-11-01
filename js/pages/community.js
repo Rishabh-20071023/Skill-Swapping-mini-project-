@@ -267,12 +267,34 @@
   }
 
   /* ---------- Tabs ------------------------------------------------------------------- */
-  function setTab(name) {
-    document.querySelectorAll("[data-community-tab]").forEach((btn) => {
-      const active = btn.dataset.communityTab === name;
-      btn.classList.toggle("is-active", active);
-      btn.setAttribute("aria-selected", String(active));
+  /* The strip itself is the shared component (js/components/sections.js), so the
+     community page gets the same markup and keyboard model as the landing page.
+     This page only loads the content of the panel that became visible. */
+  const TABS = [
+    { id: "feed", label: "Feed" },
+    { id: "resources", label: "Resources" },
+    { id: "events", label: "Events" },
+    { id: "members", label: "Members" },
+  ];
+
+  function renderTabs() {
+    const host = document.getElementById("community-tabs");
+    if (!host) return;
+    host.innerHTML = SL.sections.tablist({
+      id: "community",
+      label: "Community sections",
+      panelPrefix: "tab-",
+      tabs: TABS,
     });
+    SL.sections.initTabs(host);
+    // Fires for clicks and for arrow-key selection inside the component.
+    host.addEventListener("tabchange", (e) => {
+      const id = (e.detail && e.detail.id) || "";
+      setTab(id.replace("community-tab-", ""));
+    });
+  }
+
+  function setTab(name) {
     ["feed", "resources", "events", "members"].forEach((key) => {
       document.getElementById(`tab-${key}`).hidden = key !== name;
     });
@@ -646,10 +668,7 @@
 
   /* ---------- Detail wiring --------------------------------------------------------------------- */
   function wireDetail() {
-    document.querySelectorAll("[data-community-tab]").forEach((btn) => {
-      btn.addEventListener("click", () => setTab(btn.dataset.communityTab));
-    });
-
+    // Tab clicks/keys are handled by the shared tab component (renderTabs).
     const view = document.getElementById("view-detail");
 
     view.addEventListener("click", (e) => {
@@ -786,6 +805,7 @@
 
     renderCover();
     renderSidebar();
+    renderTabs();
     wireDetail();
     setTab("feed");
     SL.motion.initAll();
